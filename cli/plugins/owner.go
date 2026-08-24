@@ -6,8 +6,6 @@ import (
 	"errors"
 	"io"
 	"os"
-
-	"os/exec"
 	"slices"
 	"strings"
 	"sync"
@@ -327,19 +325,8 @@ func handleSh(ctx *Context) error {
 	}
 	cliutils.ActiveShellSessionsMu.Unlock()
 
-	shell := "bash"
-	if _, err := exec.LookPath("bash"); err != nil {
-		shell = "sh"
-	}
-
-	// If stdbuf exists, use it to force unbuffered / line-buffered stdout and stderr
-	execCmdStr := commandStr
-	if _, err := exec.LookPath("stdbuf"); err == nil {
-		execCmdStr = "stdbuf -oL -eL " + commandStr
-	}
-
 	execCtx, cancel := context.WithTimeout(context.Background(), 15*time.Minute)
-	cmd := exec.CommandContext(execCtx, shell, "-c", execCmdStr)
+	cmd := cliutils.BuildShellCmd(execCtx, commandStr)
 
 	// Set unbuffered terminal environment variables
 	cmd.Env = append(os.Environ(),
