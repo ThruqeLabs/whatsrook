@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -56,7 +57,8 @@ type Config struct {
 	ClientType      ClientType
 	Verbose         bool
 	SkipOldMessages bool
-	AsyncMessageAck bool // If true, SendMessage will return immediately after writing to the socket and process server ACKs in the background.
+	AsyncMessageAck bool      // If true, SendMessage will return immediately after writing to the socket and process server ACKs in the background.
+	ConsoleOut      io.Writer // Optional custom console writer (e.g. for TUI log streaming)
 }
 
 // Abstraction over the whatsmeow WhatsApp client and store container.
@@ -121,8 +123,14 @@ func (c *Client) InitSession(ctx context.Context) error {
 	}
 
 	// Logs go into DataDir/logs/ — shared across all sessions.
-	if err := utils.InitLogger(c.Config.DataDir, c.Config.Verbose); err != nil {
-		return fmt.Errorf("failed to initialize logger: %w", err)
+	if c.Config.ConsoleOut != nil {
+		if err := utils.InitLoggerWithOutput(c.Config.DataDir, c.Config.Verbose, c.Config.ConsoleOut); err != nil {
+			return fmt.Errorf("failed to initialize logger: %w", err)
+		}
+	} else {
+		if err := utils.InitLogger(c.Config.DataDir, c.Config.Verbose); err != nil {
+			return fmt.Errorf("failed to initialize logger: %w", err)
+		}
 	}
 
 	waLevel := "INFO"

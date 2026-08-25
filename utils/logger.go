@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"io"
 	"whatsrook/logger"
 
 	waLog "go.mau.fi/whatsmeow/util/log"
@@ -9,6 +10,11 @@ import (
 // InitLogger initializes the global logger with stdout and per-level log files in sessionDir/logs.
 func InitLogger(sessionDir string, verbose bool) error {
 	return Logger.InitLogger(sessionDir, verbose)
+}
+
+// InitLoggerWithOutput initializes the global logger with custom console output and per-level log files in sessionDir/logs.
+func InitLoggerWithOutput(sessionDir string, verbose bool, consoleOut io.Writer) error {
+	return Logger.InitLoggerWithOutput(sessionDir, verbose, consoleOut)
 }
 
 // CloseLogger flushes and closes all open log files.

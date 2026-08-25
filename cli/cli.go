@@ -23,6 +23,10 @@ type CLIArgs struct {
 	RedisURL        string
 	SkipOldMessages bool
 	Port            int
+	Interactive     bool
+	Idle            bool
+	NoTUI           bool
+	TUI             bool
 }
 
 func parseCLIArgs() CLIArgs {
@@ -36,17 +40,21 @@ func parseCLIArgsFrom(cmdArgs []string) CLIArgs {
 
 	defaultPort := getEnvInt("PORT", getEnvInt("WS_PORT", 3000))
 	var (
-		session  = fs.String("s", "", "")
-		pair     = fs.Bool("p", false, "")
-		client   = fs.String("c", "", "")
-		database = fs.String("db", "", "")
-		redisURL = fs.String("redis", "", "")
-		port     = fs.Int("P", defaultPort, "")
-		qr       = fs.Bool("q", false, "")
-		logout   = fs.Bool("l", false, "")
-		update   = fs.Bool("u", false, "")
-		verbose  = fs.Bool("v", false, "")
-		noSkip   = fs.Bool("no-skip-old", false, "")
+		session     = fs.String("s", "", "")
+		pair        = fs.Bool("p", false, "")
+		client      = fs.String("c", "", "")
+		database    = fs.String("db", "", "")
+		redisURL    = fs.String("redis", "", "")
+		port        = fs.Int("P", defaultPort, "")
+		qr          = fs.Bool("q", false, "")
+		logout      = fs.Bool("l", false, "")
+		update      = fs.Bool("u", false, "")
+		verbose     = fs.Bool("v", false, "")
+		noSkip      = fs.Bool("no-skip-old", false, "")
+		interactive = fs.Bool("i", false, "")
+		idle        = fs.Bool("idle", false, "")
+		noTUI       = fs.Bool("no-tui", false, "")
+		tui         = fs.Bool("tui", false, "")
 	)
 
 	fs.StringVar(session, "session", "", "")
@@ -59,6 +67,9 @@ func parseCLIArgsFrom(cmdArgs []string) CLIArgs {
 	fs.BoolVar(logout, "logout", false, "")
 	fs.BoolVar(update, "update", false, "")
 	fs.BoolVar(verbose, "verbose", false, "")
+	fs.BoolVar(interactive, "interactive", false, "")
+	fs.BoolVar(idle, "standby", false, "")
+	fs.BoolVar(noTUI, "plain", false, "")
 
 	fs.Usage = func() {
 		fmt.Print(`Usage: whatsrook [-session <phone_number>] [OPTIONS]
@@ -66,7 +77,7 @@ func parseCLIArgsFrom(cmdArgs []string) CLIArgs {
        whatsrook --update [stable | beta]
 
 Options:
-  -s, --session <phone>  Phone number used to identify the session (runs in idle mode if omitted)
+  -s, --session <phone>  Phone number used to identify the session (runs wizard or idle if omitted)
   -p, --pair             Request a pair code using the --session phone number
   -P, --port <port>      WebSocket/HTTP server port (default: 3000 or $PORT)
   -c, --client <type>    Client type: chrome (default), android, ios
@@ -78,6 +89,10 @@ Options:
                          switch channels (prints a notice if already on the requested channel)
   -v, --verbose          Enable verbose logging
   --no-skip-old          Process messages sent while the bot was offline (default: skip them)
+  -i, --interactive      Run the interactive step-by-step setup wizard
+  --idle, --standby      Run in standby idle server mode without prompting
+  --no-tui, --plain      Disable the interactive Agentic TUI dashboard and use plain stdout logs
+  --tui                  Force the interactive Agentic TUI dashboard
   -h, --help             Show this help message
 `)
 	}
@@ -213,6 +228,26 @@ Options:
 		skipOldVal = getEnvBool("SKIP_OLD_MESSAGES")
 	}
 
+	interactiveVal := *interactive
+	if !explicitFlags["i"] && !explicitFlags["interactive"] {
+		interactiveVal = getEnvBool("INTERACTIVE")
+	}
+
+	idleVal := *idle
+	if !explicitFlags["idle"] && !explicitFlags["standby"] {
+		idleVal = getEnvBool("IDLE") || getEnvBool("STANDBY")
+	}
+
+	noTUIVal := *noTUI
+	if !explicitFlags["no-tui"] && !explicitFlags["plain"] {
+		noTUIVal = getEnvBool("NO_TUI") || getEnvBool("PLAIN")
+	}
+
+	tuiVal := *tui
+	if !explicitFlags["tui"] {
+		tuiVal = getEnvBool("TUI")
+	}
+
 	return CLIArgs{
 		Session:         sessionVal,
 		Pair:            pairVal,
@@ -226,6 +261,10 @@ Options:
 		RedisURL:        redisVal,
 		SkipOldMessages: skipOldVal,
 		Port:            portVal,
+		Interactive:     interactiveVal,
+		Idle:            idleVal,
+		NoTUI:           noTUIVal,
+		TUI:             tuiVal,
 	}
 }
 
