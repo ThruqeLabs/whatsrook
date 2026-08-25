@@ -1,6 +1,6 @@
 syntax = "proto2";
 package InstamadilloCoreTypeAdminMessage;
-option go_package = "go.mau.fi/whatsmeow/proto/instamadilloCoreTypeAdminMessage";
+option go_package = "wa-core/proto/instamadilloCoreTypeAdminMessage";
 
 message AdminMessage {
 	oneof adminMessageSubtype {

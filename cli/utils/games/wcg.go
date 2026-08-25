@@ -10,8 +10,8 @@ import (
 	"time"
 	"unicode"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core"
+	"wa-core/types"
 )
 
 // GetRandomStartingLetter returns a random uppercase letter from A to Z.

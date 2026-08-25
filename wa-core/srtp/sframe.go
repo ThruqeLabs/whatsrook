@@ -7,7 +7,7 @@ import (
 	"errors"
 
 	"github.com/rs/zerolog"
-	"go.mau.fi/whatsmeow/callutil"
+	"wa-core/callutil"
 )
 
 // errBadCallKeyLen is returned when the call key is not exactly 32 bytes, the only

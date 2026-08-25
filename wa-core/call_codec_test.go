@@ -3,7 +3,7 @@ package whatsmeow
 import (
 	"testing"
 
-	"go.mau.fi/whatsmeow/signaling"
+	"wa-core/signaling"
 )
 
 // TestSelectAudioCodec pins the codec selection: only an explicit, present

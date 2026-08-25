@@ -7,12 +7,12 @@
 package instamadilloCoreTypeText
 
 import (
-	instamadilloCoreTypeMedia "go.mau.fi/whatsmeow/proto/instamadilloCoreTypeMedia"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	instamadilloCoreTypeMedia "wa-core/proto/instamadilloCoreTypeMedia"
 )
 
 const (

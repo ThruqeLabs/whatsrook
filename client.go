@@ -16,12 +16,12 @@ import (
 	"whatsrook/utils"
 	"whatsrook/utils/cache"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/proto/waCompanionReg"
-	"go.mau.fi/whatsmeow/proto/waWa6"
-	"go.mau.fi/whatsmeow/store"
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core"
+	"wa-core/proto/waCompanionReg"
+	"wa-core/proto/waWa6"
+	"wa-core/store"
+	"wa-core/store/sqlstore"
+	"wa-core/types"
 
 	_ "github.com/lib/pq"
 	_ "modernc.org/sqlite"

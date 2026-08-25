@@ -8,8 +8,8 @@ import (
 
 	"whatsrook/logger"
 
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
+	"wa-core/types"
+	"wa-core/types/events"
 )
 
 // WARook is the per-request builder engine bound to a PluginContext.

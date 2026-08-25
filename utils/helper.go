@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types/events"
+	"wa-core/proto/waE2E"
+	"wa-core/types/events"
 )
 
 // UnwrapMessageProto unwraps nested message wrappers such as EphemeralMessage, ViewOnceMessage,

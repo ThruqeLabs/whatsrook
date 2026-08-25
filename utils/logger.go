@@ -4,7 +4,7 @@ import (
 	"io"
 	Logger "whatsrook/logger"
 
-	waLog "go.mau.fi/whatsmeow/util/log"
+	waLog "wa-core/util/log"
 )
 
 // InitLogger initializes the global logger with stdout and per-level log files in sessionDir/logs.

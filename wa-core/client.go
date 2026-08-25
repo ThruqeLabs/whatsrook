@@ -1,6 +1,3 @@
-// Copyright (c) 2021 Tulir Asokan
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
@@ -29,18 +26,18 @@ import (
 	"golang.org/x/net/proxy"
 	"golang.org/x/sync/semaphore"
 
-	"go.mau.fi/whatsmeow/appstate"
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/diag"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/proto/waWa6"
-	"go.mau.fi/whatsmeow/proto/waWeb"
-	"go.mau.fi/whatsmeow/socket"
-	"go.mau.fi/whatsmeow/store"
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
-	"go.mau.fi/whatsmeow/util/keys"
-	waLog "go.mau.fi/whatsmeow/util/log"
+	"wa-core/appstate"
+	waBinary "wa-core/binary"
+	"wa-core/diag"
+	"wa-core/proto/waE2E"
+	"wa-core/proto/waWa6"
+	"wa-core/proto/waWeb"
+	"wa-core/socket"
+	"wa-core/store"
+	"wa-core/types"
+	"wa-core/types/events"
+	"wa-core/util/keys"
+	waLog "wa-core/util/log"
 )
 
 // EventHandler is a function that can handle events from WhatsApp.

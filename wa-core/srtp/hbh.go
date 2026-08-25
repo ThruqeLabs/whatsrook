@@ -6,7 +6,7 @@ import (
 	"errors"
 
 	"github.com/rs/zerolog"
-	"go.mau.fi/whatsmeow/callutil"
+	"wa-core/callutil"
 )
 
 // errBadHbhKeyLen is returned when the hop-by-hop key is not exactly 30 bytes,

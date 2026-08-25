@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 )
 
 var (

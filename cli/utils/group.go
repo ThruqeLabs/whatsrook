@@ -8,7 +8,7 @@ import (
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 )
 
 var (

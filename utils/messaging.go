@@ -9,12 +9,12 @@ import (
 	"whatsrook/logger"
 	"whatsrook/utils/formatting"
 
-	"go.mau.fi/whatsmeow/store/sqlstore"
+	"wa-core/store/sqlstore"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
 	"google.golang.org/protobuf/proto"
+	"wa-core"
+	"wa-core/proto/waE2E"
+	"wa-core/types"
 )
 
 // formatTextResponse strips asterisks and emojis from text response

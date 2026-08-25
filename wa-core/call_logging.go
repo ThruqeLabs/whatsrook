@@ -2,7 +2,7 @@ package whatsmeow
 
 import (
 	"github.com/rs/zerolog"
-	"go.mau.fi/whatsmeow/diag"
+	"wa-core/diag"
 )
 
 // Option configures optional, non-behavioral aspects of the call/media types —

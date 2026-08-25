@@ -7,10 +7,10 @@ import (
 	"sync"
 
 	"github.com/rs/zerolog"
-	"go.mau.fi/whatsmeow/mlow"
-	"go.mau.fi/whatsmeow/rtp"
-	"go.mau.fi/whatsmeow/srtp"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/mlow"
+	"wa-core/rtp"
+	"wa-core/srtp"
+	"wa-core/types"
 )
 
 type participantAudioDecoder interface {

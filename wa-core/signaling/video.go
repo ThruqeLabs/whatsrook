@@ -4,8 +4,8 @@ import (
 	"strconv"
 
 	"github.com/rs/zerolog"
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/types"
+	waBinary "wa-core/binary"
+	"wa-core/types"
 )
 
 // Video call signaling follows the 1:1 video lifecycle implemented by whatsapp-rust.

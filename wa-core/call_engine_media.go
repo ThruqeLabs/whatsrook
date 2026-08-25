@@ -14,12 +14,12 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	"go.mau.fi/whatsmeow/diag"
-	"go.mau.fi/whatsmeow/mlow"
-	"go.mau.fi/whatsmeow/relay"
-	"go.mau.fi/whatsmeow/rtp"
-	"go.mau.fi/whatsmeow/srtp"
-	"go.mau.fi/whatsmeow/stun"
+	"wa-core/diag"
+	"wa-core/mlow"
+	"wa-core/relay"
+	"wa-core/rtp"
+	"wa-core/srtp"
+	"wa-core/stun"
 )
 
 // The live-relay media loop: connect+allocate to the elected relay, then run the

@@ -8,7 +8,7 @@ import (
 
 	"whatsrook/utils/cache"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 )
 
 const cacheTTL = 10 * time.Minute

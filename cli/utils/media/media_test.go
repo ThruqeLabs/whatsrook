@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
+	"wa-core/proto/waE2E"
+	"wa-core/types"
+	"wa-core/types/events"
 )
 
 func TestRecordAndGetRecentMessage(t *testing.T) {

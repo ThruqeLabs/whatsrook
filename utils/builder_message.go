@@ -5,7 +5,7 @@ import (
 
 	"whatsrook/logger"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 )
 
 // MessageBuilder is a fluent builder for sending a message of any

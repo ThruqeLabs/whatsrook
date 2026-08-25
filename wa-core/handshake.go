@@ -1,6 +1,3 @@
-// Copyright (c) 2021 Tulir Asokan
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
@@ -15,10 +12,10 @@ import (
 	"github.com/polymorfa/libsignal-protocol-go/ecc"
 	"google.golang.org/protobuf/proto"
 
-	"go.mau.fi/whatsmeow/proto/waCert"
-	"go.mau.fi/whatsmeow/proto/waWa6"
-	"go.mau.fi/whatsmeow/socket"
-	"go.mau.fi/whatsmeow/util/keys"
+	"wa-core/proto/waCert"
+	"wa-core/proto/waWa6"
+	"wa-core/socket"
+	"wa-core/util/keys"
 )
 
 const NoiseHandshakeResponseTimeout = 20 * time.Second

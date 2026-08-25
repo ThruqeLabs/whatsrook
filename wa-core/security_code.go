@@ -1,5 +1,3 @@
-// Copyright (c) 2026 Rajeh Taher
-//
 // Licensed under the MIT License. See LICENSE-MIT for details.
 
 package whatsmeow
@@ -14,9 +12,9 @@ import (
 
 	"google.golang.org/protobuf/proto"
 
-	"go.mau.fi/whatsmeow/proto/waFingerprint"
-	"go.mau.fi/whatsmeow/store"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/proto/waFingerprint"
+	"wa-core/store"
+	"wa-core/types"
 )
 
 const securityCodeIterations = 5200

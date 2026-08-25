@@ -6,10 +6,10 @@ import (
 	"strconv"
 	"testing"
 
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/signaling"
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
+	waBinary "wa-core/binary"
+	"wa-core/signaling"
+	"wa-core/types"
+	"wa-core/types/events"
 )
 
 type lifecycleAudioSource struct {

@@ -4,9 +4,9 @@ import (
 	"context"
 	"strings"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core"
+	"wa-core/store/sqlstore"
+	"wa-core/types"
 
 	clistore "whatsrook/cli/store"
 	"whatsrook/utils"

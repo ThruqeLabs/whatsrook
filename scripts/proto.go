@@ -37,7 +37,7 @@ func runProto(args []string) error {
 		return fmt.Errorf("protoc compiler not found in PATH")
 	}
 
-	// 4. Normalize option go_package in proto files (ensure go.mau.fi/whatsmeow/proto/...)
+	// 4. Normalize option go_package in proto files (ensure wa-core/proto/...)
 	if err := normalizeProtoPackageOptions(protoDir); err != nil {
 		return fmt.Errorf("failed to normalize proto go_package options: %w", err)
 	}
@@ -187,7 +187,7 @@ func ensureProtocGenGo() error {
 
 func normalizeProtoPackageOptions(protoDir string) error {
 	const legacyPrefix = "github.com/polymorfa/hypermeow/proto/"
-	const targetPrefix = "go.mau.fi/whatsmeow/proto/"
+	const targetPrefix = "wa-core/proto/"
 
 	return filepath.WalkDir(protoDir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {

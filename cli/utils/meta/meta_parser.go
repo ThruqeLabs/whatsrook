@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	stripmd "github.com/writeas/go-strip-markdown/v2"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 )
 
 const metaAiSystemPrompt = `[SYSTEM CONTEXT:

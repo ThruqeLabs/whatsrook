@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/types"
+	waBinary "wa-core/binary"
+	"wa-core/types"
 )
 
 func TestInitialAndInviteGroupOfferShapes(t *testing.T) {

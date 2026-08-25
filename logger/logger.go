@@ -14,7 +14,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	waLog "go.mau.fi/whatsmeow/util/log"
+	waLog "wa-core/util/log"
 )
 
 var (

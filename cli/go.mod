@@ -4,7 +4,7 @@ go 1.27.0
 
 replace whatsrook => ../
 
-replace go.mau.fi/whatsmeow => ../wa-core
+replace wa-core => ../wa-core
 
 require (
 	github.com/charmbracelet/bubbles v0.20.0
@@ -19,7 +19,7 @@ require (
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/writeas/go-strip-markdown/v2 v2.1.1
 	go.mau.fi/util v0.10.0
-	go.mau.fi/whatsmeow v0.0.0-20260821141805-33cfac511629
+	wa-core v0.0.0-20260821141805-33cfac511629
 	go.uber.org/zap v1.28.0
 	golang.org/x/image v0.45.0
 	golang.org/x/term v0.45.0

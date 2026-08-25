@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"go.mau.fi/util/dbutil"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 )
 
 // GroupParticipantMetadata contains details of a group participant.

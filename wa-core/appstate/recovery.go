@@ -1,6 +1,3 @@
-// Copyright (c) 2026 Tulir Asokan
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
@@ -17,10 +14,10 @@ import (
 
 	"google.golang.org/protobuf/proto"
 
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/proto/waServerSync"
-	"go.mau.fi/whatsmeow/proto/waSyncdSnapshotRecovery"
-	"go.mau.fi/whatsmeow/store"
+	"wa-core/proto/waE2E"
+	"wa-core/proto/waServerSync"
+	"wa-core/proto/waSyncdSnapshotRecovery"
+	"wa-core/store"
 )
 
 func ParseRecovery(

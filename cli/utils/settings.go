@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/store/sqlstore"
+	"wa-core/types"
 	clistore "whatsrook/cli/store"
 )
 

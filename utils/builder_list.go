@@ -3,8 +3,8 @@ package utils
 import (
 	"whatsrook/logger"
 
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/proto/waE2E"
+	"wa-core/types"
 )
 
 // ListRow is a single row entry within a list section.

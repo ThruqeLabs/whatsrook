@@ -1,6 +1,6 @@
 syntax = "proto2";
 package WAMsgTransport;
-option go_package = "go.mau.fi/whatsmeow/proto/waMsgTransport";
+option go_package = "wa-core/proto/waMsgTransport";
 
 import "waCommon/WACommon.proto";
 

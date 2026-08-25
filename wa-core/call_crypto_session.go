@@ -5,10 +5,10 @@ import (
 	"sync/atomic"
 
 	"github.com/rs/zerolog"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 
-	"go.mau.fi/whatsmeow/rtp"
-	"go.mau.fi/whatsmeow/srtp"
+	"wa-core/rtp"
+	"wa-core/srtp"
 )
 
 // Call state machine and the media-pipeline composition (Opus payload → RTP WARP

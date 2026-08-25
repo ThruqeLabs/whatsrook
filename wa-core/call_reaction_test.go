@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"go.mau.fi/whatsmeow/rtp"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/rtp"
+	"wa-core/types"
 )
 
 func TestAppDataReactionMatchesCapturedWirePayload(t *testing.T) {

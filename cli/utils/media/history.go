@@ -4,8 +4,8 @@ import (
 	"sync"
 	"time"
 
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
+	"wa-core/types"
+	"wa-core/types/events"
 
 	"whatsrook/utils"
 )

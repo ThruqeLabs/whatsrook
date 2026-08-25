@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core"
+	"wa-core/types"
 )
 
 // UnscrambleState defines the phase of an Unscramble match.

@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	"go.mau.fi/whatsmeow/signaling"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/signaling"
+	"wa-core/types"
 )
 
 // Call is one live direct or group call. A direct call may become an ad-hoc group

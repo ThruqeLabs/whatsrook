@@ -14,7 +14,7 @@ import (
 	"time"
 	"whatsrook/logger"
 
-	"go.mau.fi/whatsmeow/types/events"
+	"wa-core/types/events"
 
 	cliutils "whatsrook/cli/utils"
 	"whatsrook/utils"

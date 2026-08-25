@@ -1,4 +1,4 @@
-module go.mau.fi/whatsmeow
+module wa-core
 
 go 1.27.0
 

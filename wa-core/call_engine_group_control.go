@@ -7,11 +7,11 @@ import (
 	"errors"
 	"fmt"
 
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/signaling"
-	"go.mau.fi/whatsmeow/types"
 	"google.golang.org/protobuf/proto"
+	waBinary "wa-core/binary"
+	"wa-core/proto/waE2E"
+	"wa-core/signaling"
+	"wa-core/types"
 )
 
 func (e *engine) onUnknownCallEvent(node *waBinary.Node) {
@@ -69,7 +69,6 @@ func (e *engine) onUnknownCallEvent(node *waBinary.Node) {
 }
 
 func (e *engine) applyWaitingRoomUpdate(room signaling.WaitingRoom) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/call_link.go#L388-L441
 	state := WaitingRoomState{
 		Enabled: room.Enabled, IsAdmin: room.IsAdmin,
 		TransactionID: room.TransactionID,

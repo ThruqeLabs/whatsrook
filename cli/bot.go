@@ -23,9 +23,9 @@ import (
 	"whatsrook/utils"
 	"whatsrook/utils/qr"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	"go.mau.fi/whatsmeow/types/events"
+	"wa-core"
+	"wa-core/store/sqlstore"
+	"wa-core/types/events"
 )
 
 // BotConfig holds configuration parameters for the CLI

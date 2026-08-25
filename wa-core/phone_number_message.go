@@ -1,10 +1,8 @@
-// Copyright (c) 2026 Rajeh Taher
-//
 // Licensed under the MIT License. See LICENSE-MIT for details.
 
 package whatsmeow
 
-import "go.mau.fi/whatsmeow/proto/waE2E"
+import "wa-core/proto/waE2E"
 
 func BuildRequestPhoneNumberMessage(contextInfo *waE2E.ContextInfo) *waE2E.Message {
 	return &waE2E.Message{

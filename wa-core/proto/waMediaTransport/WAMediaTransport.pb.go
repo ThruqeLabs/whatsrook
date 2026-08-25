@@ -7,12 +7,12 @@
 package waMediaTransport
 
 import (
-	waCommon "go.mau.fi/whatsmeow/proto/waCommon"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	waCommon "wa-core/proto/waCommon"
 )
 
 const (

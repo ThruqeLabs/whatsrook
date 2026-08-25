@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 )
 
 // TextBuilder provides a high-level, fluent, memory-efficient abstraction

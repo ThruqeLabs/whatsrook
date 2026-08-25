@@ -1,6 +1,3 @@
-// Copyright (c) 2023 Tulir Asokan
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
@@ -21,10 +18,10 @@ import (
 	"golang.org/x/crypto/curve25519"
 	"golang.org/x/crypto/pbkdf2"
 
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/util/hkdfutil"
-	"go.mau.fi/whatsmeow/util/keys"
+	waBinary "wa-core/binary"
+	"wa-core/types"
+	"wa-core/util/hkdfutil"
+	"wa-core/util/keys"
 )
 
 // PairClientType is the type of client to use with PairCode.

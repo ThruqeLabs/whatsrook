@@ -3,8 +3,8 @@ package utils
 import (
 	"whatsrook/logger"
 
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/proto/waE2E"
+	"wa-core/types"
 )
 
 // PollBuilder builds and sends a WhatsApp poll and optionally registers a reactive

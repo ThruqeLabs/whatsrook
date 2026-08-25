@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 )
 
 func TestFormattingHelpers(t *testing.T) {

@@ -12,10 +12,10 @@ import (
 	"time"
 	"whatsrook/logger"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core"
+	"wa-core/proto/waE2E"
+	"wa-core/store/sqlstore"
+	"wa-core/types"
 
 	"whatsrook/cli/updater"
 	cliutils "whatsrook/cli/utils"

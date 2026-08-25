@@ -11,10 +11,10 @@ import (
 	"whatsrook/cli/store"
 	"whatsrook/utils"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
+	"wa-core"
+	"wa-core/store/sqlstore"
+	"wa-core/types"
+	"wa-core/types/events"
 )
 
 // GroupManager provides a thread-safe registry, cache, and sync coordinator for WhatsApp groups, communities, and newsletters.

@@ -13,10 +13,10 @@ import (
 
 	"whatsrook/logger"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
+	"wa-core"
+	"wa-core/proto/waE2E"
+	"wa-core/types"
+	"wa-core/types/events"
 )
 
 // MetaAiBotJID is the official Meta AI bot JID on WhatsApp.

@@ -1,6 +1,6 @@
 package whatsmeow
 
-import "go.mau.fi/whatsmeow/signaling"
+import "wa-core/signaling"
 
 // AudioCodec identifies the wire audio codec negotiated for a call. WhatsApp 1:1
 // audio is carried in RTP payload type 120 regardless of codec; the codec itself

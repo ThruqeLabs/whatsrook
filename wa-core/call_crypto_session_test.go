@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"testing"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 
-	"go.mau.fi/whatsmeow/rtp"
-	"go.mau.fi/whatsmeow/srtp"
+	"wa-core/rtp"
+	"wa-core/srtp"
 )
 
 func peerJID() types.JID { return types.JID{User: "222222222222222", Server: types.HiddenUserServer} }
