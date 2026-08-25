@@ -468,19 +468,21 @@ func SaveEnvConfig(args CLIArgs, filename string) error {
 		for _, line := range lines {
 			trimmed := strings.TrimSpace(line)
 			if trimmed == "" || strings.HasPrefix(trimmed, "#") {
-				sb.WriteString(line + "\n")
+				sb.WriteString(line)
+				sb.WriteString("\n")
 				continue
 			}
 			parts := strings.SplitN(trimmed, "=", 2)
 			if len(parts) == 2 {
 				k := strings.TrimSpace(parts[0])
 				if v, ok := newVals[k]; ok {
-					sb.WriteString(fmt.Sprintf("%s=%s\n", k, v))
+					fmt.Fprintf(&sb, "%s=%s\n", k, v)
 					writtenKeys[k] = true
 					continue
 				}
 			}
-			sb.WriteString(line + "\n")
+			sb.WriteString(line)
+			sb.WriteString("\n")
 		}
 	} else {
 		sb.WriteString("# WhatsRook Environment Configuration\n\n")
@@ -493,7 +495,7 @@ func SaveEnvConfig(args CLIArgs, filename string) error {
 	}
 	for _, k := range orderedKeys {
 		if v, ok := newVals[k]; ok && !writtenKeys[k] {
-			sb.WriteString(fmt.Sprintf("%s=%s\n", k, v))
+			fmt.Fprintf(&sb, "%s=%s\n", k, v)
 		}
 	}
 
