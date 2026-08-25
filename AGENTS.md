@@ -16,7 +16,16 @@ Welcome to WhatsRook.
     - `whatsrook/utils/httputil`: HTTP client utility helpers with timeouts and header management.
     - `whatsrook/utils/cache`: Multi-backend caching abstractions (in-memory, Redis).
     - `whatsrook/utils/qr`: QR rendering and streaming HTTP server.
-  - `whatsrook/cli`: WhatsApp bot CLI application, plugin commands (`cli/plugins`), dedicated TUI package (`cli/tui`: interactive Bubbletea setup wizard and live agentic dashboard), and consolidated CLI feature utilities (`cli/utils`: media downloaders, font styling, URL validators, prompts, timezones, Meta AI parsers, games).
+  - `whatsrook/cli`: WhatsApp bot CLI application, plugin commands (`cli/plugins`), dedicated TUI package (`cli/tui`: interactive Bubbletea setup wizard and live agentic dashboard), and modular domain subpackages under `whatsrook/cli/utils`:
+    - `whatsrook/cli/utils/font`: Unicode font styling, styling tables, and text normalization.
+    - `whatsrook/cli/utils/timezone`: Windows & IANA timezone mapping database and alias resolver.
+    - `whatsrook/cli/utils/markets`: Real-time market quotes and Bitcoin network / halving predictors.
+    - `whatsrook/cli/utils/news`: AP News & WABetaInfo scrapers, article parsers, and article selection.
+    - `whatsrook/cli/utils/meta`: Meta AI client, protocol response streamer, prompt builder, and personality traits.
+    - `whatsrook/cli/utils/games`: Game engines (Tic-Tac-Toe, Word Chain Game, Unscramble word game).
+    - `whatsrook/cli/utils/fun`: Content and entertainment utilities (facts, quotes, jokes, rizz, math solver, why.com search).
+    - `whatsrook/cli/utils/system`: Process diagnostics, CPU / RAM / uptime metric helpers.
+    - `whatsrook/cli/utils/media`: Message history and quoted context tracking.
 
 ## Development Management
 

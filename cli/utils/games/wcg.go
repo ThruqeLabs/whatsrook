@@ -1,0 +1,411 @@
+// Package games provides the core Word Chain Game (WCG) engine.
+package games
+
+import (
+	crand "crypto/rand"
+	"math/big"
+	"math/rand"
+	"strings"
+	"sync"
+	"time"
+	"unicode"
+
+	"go.mau.fi/whatsmeow"
+	"go.mau.fi/whatsmeow/types"
+)
+
+// GetRandomStartingLetter returns a random uppercase letter from A to Z.
+func GetRandomStartingLetter() rune {
+	letters := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	n, err := crand.Int(crand.Reader, big.NewInt(int64(len(letters))))
+	if err != nil {
+		return letters[rand.Intn(len(letters))]
+	}
+	return letters[n.Int64()]
+}
+
+// WCGState defines the state of a Word Chain Game session.
+type WCGState int
+
+const (
+	WCGStateLobby WCGState = iota
+	WCGStateInProgress
+)
+
+// WCGPlayer represents a player in a WCG match.
+type WCGPlayer struct {
+	LID            types.JID
+	MentionJID     types.JID
+	Tag            string
+	Score          int
+	Eliminated     bool
+	CorrectGuesses int
+	TotalTimeMs    int64
+	GuessesCount   int
+	JoinedAt       time.Time
+}
+
+// WCGGame represents a Word Chain Game session.
+type WCGGame struct {
+	Mu                sync.Mutex
+	ChatKey           string
+	State             WCGState
+	HostLID           types.JID
+	HostMention       types.JID
+	HostTag           string
+	Players           []*WCGPlayer
+	CurrentTurnIdx    int
+	RequiredChar      rune
+	LetterRepeatCount int
+	MinLength         int
+	RoundCount        int
+	AnswersInRound    int
+	UsedWords         map[string]bool
+	TurnStartTime     time.Time
+	LobbyTimer        *time.Timer
+	TurnTimer         *time.Timer
+	GameStartTime     time.Time
+	Client            *whatsmeow.Client
+	ChatJID           types.JID
+}
+
+var (
+	wcgMu    sync.Mutex
+	wcgGames = make(map[string]*WCGGame) // chat key -> game
+)
+
+// IsWCGGameActive returns true if there is an active WCG game in the chat.
+func IsWCGGameActive(chatKey string) bool {
+	wcgMu.Lock()
+	defer wcgMu.Unlock()
+	_, exists := wcgGames[chatKey]
+	return exists
+}
+
+// GetWCGGame returns the active game for a chat key, or nil.
+func GetWCGGame(chatKey string) *WCGGame {
+	wcgMu.Lock()
+	defer wcgMu.Unlock()
+	return wcgGames[chatKey]
+}
+
+// CreateWCGGame creates a new lobby for a chat.
+func CreateWCGGame(chatKey string, hostLID, hostMention types.JID, hostTag string, chatJID types.JID, client *whatsmeow.Client) *WCGGame {
+	game := &WCGGame{
+		ChatKey:      chatKey,
+		State:        WCGStateLobby,
+		HostLID:      hostLID,
+		HostMention:  hostMention,
+		HostTag:      hostTag,
+		RequiredChar: GetRandomStartingLetter(),
+		MinLength:    3,
+		RoundCount:   1,
+		UsedWords:    make(map[string]bool),
+		ChatJID:      chatJID,
+		Client:       client,
+	}
+
+	game.Players = append(game.Players, &WCGPlayer{
+		LID:        hostLID,
+		MentionJID: hostMention,
+		Tag:        hostTag,
+		JoinedAt:   time.Now(),
+	})
+
+	wcgMu.Lock()
+	wcgGames[chatKey] = game
+	wcgMu.Unlock()
+
+	return game
+}
+
+// DeleteWCGGame removes a game from the active map.
+func DeleteWCGGame(chatKey string) {
+	wcgMu.Lock()
+	defer wcgMu.Unlock()
+	delete(wcgGames, chatKey)
+}
+
+// AddPlayer adds a player to an existing lobby.
+func (g *WCGGame) AddPlayer(lid, mentionJID types.JID, tag string) bool {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+
+	if g.State != WCGStateLobby {
+		return false
+	}
+	if g.FindPlayerIndex(lid) != -1 {
+		return false
+	}
+
+	g.Players = append(g.Players, &WCGPlayer{
+		LID:        lid,
+		MentionJID: mentionJID,
+		Tag:        tag,
+		JoinedAt:   time.Now(),
+	})
+	return true
+}
+
+// FindPlayerIndex returns the index of a player by LID, or -1.
+func (g *WCGGame) FindPlayerIndex(lid types.JID) int {
+	for i, p := range g.Players {
+		if p.LID.User == lid.User {
+			return i
+		}
+	}
+	return -1
+}
+
+// IsPlayerEliminated returns true if the player is eliminated.
+func (g *WCGGame) IsPlayerEliminated(lid types.JID) bool {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+	idx := g.FindPlayerIndex(lid)
+	if idx == -1 {
+		return true
+	}
+	return g.Players[idx].Eliminated
+}
+
+// GetActivePlayers returns all non-eliminated players.
+func (g *WCGGame) GetActivePlayers() []*WCGPlayer {
+	var active []*WCGPlayer
+	for _, p := range g.Players {
+		if !p.Eliminated {
+			active = append(active, p)
+		}
+	}
+	return active
+}
+
+// IsWordUsed checks if a word has already been submitted in the current game.
+func (g *WCGGame) IsWordUsed(word string) bool {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+	return g.UsedWords[strings.ToLower(word)]
+}
+
+// StartGame transitions the game from lobby to in-progress.
+func (g *WCGGame) StartGame() bool {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+
+	if g.State == WCGStateInProgress {
+		return false
+	}
+
+	g.State = WCGStateInProgress
+	g.GameStartTime = time.Now()
+	g.RequiredChar = GetRandomStartingLetter()
+	g.MinLength = 3
+	g.RoundCount = 1
+	g.AnswersInRound = 0
+	g.CurrentTurnIdx = 0
+	g.UsedWords = make(map[string]bool)
+
+	active := g.GetActivePlayers()
+	if len(active) == 0 {
+		DeleteWCGGame(g.ChatKey)
+		return false
+	}
+
+	return true
+}
+
+// StartTurn sets up turn parameters for current player.
+func (g *WCGGame) StartTurn() (reqChar rune, minLen int, timeLimitSec int, currentPlayer *WCGPlayer) {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+
+	active := g.GetActivePlayers()
+	if len(active) == 0 {
+		return 'A', 3, 0, nil
+	}
+
+	if g.CurrentTurnIdx >= len(g.Players) {
+		g.CurrentTurnIdx = 0
+	}
+	for g.Players[g.CurrentTurnIdx].Eliminated {
+		g.CurrentTurnIdx = (g.CurrentTurnIdx + 1) % len(g.Players)
+	}
+
+	currentPlayer = g.Players[g.CurrentTurnIdx]
+	g.TurnStartTime = time.Now()
+
+	timeLimitSec = max(25-(g.RoundCount-1)*2, 6)
+
+	return g.RequiredChar, g.MinLength, timeLimitSec, currentPlayer
+}
+
+// ProcessGuess processes a valid word submission.
+func (g *WCGGame) ProcessGuess(word string, senderLID types.JID) (correct bool, gameOver bool, winner *WCGPlayer, currentPlayer *WCGPlayer, elapsed time.Duration) {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+
+	if g.State != WCGStateInProgress {
+		return false, true, nil, nil, 0
+	}
+
+	pIdx := g.FindPlayerIndex(senderLID)
+	if pIdx == -1 {
+		return false, false, nil, nil, 0
+	}
+
+	active := g.GetActivePlayers()
+	if len(active) == 0 {
+		return false, true, nil, nil, 0
+	}
+
+	currentPlayer = g.Players[g.CurrentTurnIdx]
+	if currentPlayer.LID.User != senderLID.User {
+		return false, false, nil, currentPlayer, 0
+	}
+
+	word = strings.ToLower(strings.TrimSpace(word))
+	elapsed = time.Since(g.TurnStartTime)
+
+	if g.TurnTimer != nil {
+		g.TurnTimer.Stop()
+	}
+
+	currentPlayer.GuessesCount++
+	currentPlayer.TotalTimeMs += elapsed.Milliseconds()
+
+	g.UsedWords[word] = true
+	currentPlayer.Score += len(word) * 10
+	currentPlayer.CorrectGuesses++
+
+	nextChar := unicode.ToUpper(rune(word[len(word)-1]))
+	if nextChar == g.RequiredChar {
+		g.LetterRepeatCount++
+	} else {
+		g.LetterRepeatCount = 0
+	}
+
+	if g.LetterRepeatCount >= 2 {
+		g.RequiredChar = GetRandomStartingLetter()
+		g.LetterRepeatCount = 0
+	} else {
+		g.RequiredChar = nextChar
+	}
+
+	g.AnswersInRound++
+	activeCount := len(g.GetActivePlayers())
+	if g.AnswersInRound >= activeCount {
+		g.AnswersInRound = 0
+		g.RoundCount++
+		g.MinLength++
+		g.RequiredChar = GetRandomStartingLetter()
+		g.LetterRepeatCount = 0
+	}
+
+	g.advanceTurnUnsafe()
+	return true, false, nil, currentPlayer, elapsed
+}
+
+func (g *WCGGame) advanceTurnUnsafe() {
+	g.CurrentTurnIdx = (g.CurrentTurnIdx + 1) % len(g.Players)
+	for g.Players[g.CurrentTurnIdx].Eliminated {
+		g.CurrentTurnIdx = (g.CurrentTurnIdx + 1) % len(g.Players)
+	}
+}
+
+// EliminateCurrentPlayer eliminates the current turn player.
+func (g *WCGGame) EliminateCurrentPlayer() (gameOver bool, winner *WCGPlayer) {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+
+	if g.CurrentTurnIdx < len(g.Players) {
+		g.Players[g.CurrentTurnIdx].Eliminated = true
+	}
+
+	rem := g.GetActivePlayers()
+	if len(rem) <= 1 {
+		if len(rem) == 1 {
+			winner = rem[0]
+		}
+		return true, winner
+	}
+
+	activeCount := len(rem)
+	if g.AnswersInRound >= activeCount {
+		g.AnswersInRound = 0
+		g.RoundCount++
+		g.MinLength++
+	}
+
+	g.advanceTurnUnsafe()
+	return false, nil
+}
+
+// FinishGame cleans up the game and returns final standings.
+func (g *WCGGame) FinishGame() (winner *WCGPlayer, standings []*WCGPlayer) {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+
+	if g.TurnTimer != nil {
+		g.TurnTimer.Stop()
+	}
+
+	active := g.GetActivePlayers()
+	if len(active) == 1 {
+		winner = active[0]
+	}
+
+	standings = make([]*WCGPlayer, len(g.Players))
+	copy(standings, g.Players)
+	for i := 0; i < len(standings); i++ {
+		for j := i + 1; j < len(standings); j++ {
+			if standings[j].Score > standings[i].Score {
+				standings[i], standings[j] = standings[j], standings[i]
+			}
+		}
+	}
+
+	DeleteWCGGame(g.ChatKey)
+	return winner, standings
+}
+
+// GetSortedPlayers returns players sorted by score descending.
+func (g *WCGGame) GetSortedPlayers() []*WCGPlayer {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+
+	sorted := make([]*WCGPlayer, len(g.Players))
+	copy(sorted, g.Players)
+	for i := range sorted {
+		for j := i + 1; j < len(sorted); j++ {
+			if sorted[j].Score > sorted[i].Score {
+				sorted[i], sorted[j] = sorted[j], sorted[i]
+			}
+		}
+	}
+	return sorted
+}
+
+// SetLobbyTimer sets the lobby countdown timer.
+func (g *WCGGame) SetLobbyTimer(timer *time.Timer) {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+	g.LobbyTimer = timer
+}
+
+// SetTurnTimer sets the turn countdown timer.
+func (g *WCGGame) SetTurnTimer(timer *time.Timer) {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+	g.TurnTimer = timer
+}
+
+// StopTimers stops both lobby and turn timers.
+func (g *WCGGame) StopTimers() {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+	if g.LobbyTimer != nil {
+		g.LobbyTimer.Stop()
+	}
+	if g.TurnTimer != nil {
+		g.TurnTimer.Stop()
+	}
+}

@@ -332,8 +332,8 @@ type zapWaLogger struct {
 	raw   *zap.Logger
 }
 
-// WhatsmeowStyle creates a fast waLog.Logger adapter with module prefix.
-func WhatsmeowStyle(module string, minLevel string, _ bool) waLog.Logger {
+// WhatsrookLog creates a fast waLog.Logger adapter with module prefix.
+func WhatsrookLog(module string, minLevel string, _ bool) waLog.Logger {
 	mu.RLock()
 	base := rawLogger
 	mu.RUnlock()
@@ -347,7 +347,7 @@ func WhatsmeowStyle(module string, minLevel string, _ bool) waLog.Logger {
 
 // NewWaLogger creates a waLog.Logger with the given module name.
 func NewWaLogger(module string) waLog.Logger {
-	return WhatsmeowStyle(module, "INFO", true)
+	return WhatsrookLog(module, "INFO", true)
 }
 
 func (z *zapWaLogger) Warnf(msg string, args ...any) {

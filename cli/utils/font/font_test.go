@@ -1,4 +1,4 @@
-package cliutils
+package font
 
 import (
 	"testing"

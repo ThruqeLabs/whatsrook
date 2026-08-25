@@ -11,7 +11,10 @@ import (
 	"strings"
 	"sync"
 
-	"whatsrook/logger"
+	Logger "whatsrook/logger"
+
+	"whatsrook/utils"
+	"whatsrook/utils/cache"
 
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/proto/waCompanionReg"
@@ -19,8 +22,6 @@ import (
 	"go.mau.fi/whatsmeow/store"
 	"go.mau.fi/whatsmeow/store/sqlstore"
 	"go.mau.fi/whatsmeow/types"
-	"whatsrook/utils"
-	"whatsrook/utils/cache"
 
 	_ "github.com/lib/pq"
 	_ "modernc.org/sqlite"
@@ -154,7 +155,7 @@ func (c *Client) InitSession(ctx context.Context) error {
 	}
 	deviceStore.ExternalCache = cache.Default()
 
-	clientLog := utils.WhatsmeowStyle("Client", "INFO", true)
+	clientLog := utils.WhatsrookLog("Client", "INFO", true)
 	rawClient := whatsmeow.NewClient(deviceStore, clientLog)
 	rawClient.AsyncMessageAck = c.Config.AsyncMessageAck
 
@@ -320,7 +321,7 @@ func ensureSSLDisabled(rawURL string) string {
 }
 
 func (c *Client) initStore(ctx context.Context, dbPath, waLevel string) (*sqlstore.Container, error) {
-	dbLog := utils.WhatsmeowStyle("Database", waLevel, true)
+	dbLog := utils.WhatsrookLog("Database", waLevel, true)
 
 	dbConn := c.Config.Database
 	if dbConn == "" {
