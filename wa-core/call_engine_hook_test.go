@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	"github.com/rs/zerolog"
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/store"
-	waLog "go.mau.fi/whatsmeow/util/log"
+	waBinary "wa-core/binary"
+	"wa-core/store"
+	waLog "wa-core/util/log"
 )
 
 func TestInstallCallAckHookMatchesPinnedUpstreamLayout(t *testing.T) {

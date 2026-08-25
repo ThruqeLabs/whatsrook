@@ -6,9 +6,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
-
 	"os"
 	"os/signal"
 	"syscall"
@@ -16,6 +16,7 @@ import (
 	"whatsrook/logger"
 
 	"whatsrook"
+	"whatsrook/cli/tui"
 	"whatsrook/cli/updater"
 	"whatsrook/utils/cache"
 )
@@ -65,10 +66,12 @@ func main() {
 	}
 
 	args := parseCLIArgs()
-	cache.Init(args.RedisURL)
+
 	defer func() {
 		_ = cache.Close()
 	}()
+
+	defer PromptExit()
 
 	if args.Update {
 		ctx := context.Background()
@@ -82,6 +85,7 @@ func main() {
 				fmt.Printf("==> Switching from %s to %s channel...\n", current, requested)
 				if err := updater.SetStoredChannel(requested); err != nil {
 					Logger.Error("failed to set channel", "err", err)
+					PromptExit()
 					os.Exit(1)
 				}
 				current = requested
@@ -97,12 +101,14 @@ func main() {
 		res, err := up.Upgrade(ctx, isBeta)
 		if err != nil {
 			Logger.Error("update failed", "err", err)
+			PromptExit()
 			os.Exit(1)
 		}
 		if res.Updated {
 			fmt.Println("==> Restarting process with new binary...")
 			err := updater.RestartProcess()
 			Logger.Error("failed to restart process", "err", err)
+			PromptExit()
 			os.Exit(1)
 		}
 
@@ -112,12 +118,78 @@ func main() {
 		}
 	}
 
+	// Interactive Wizard and Terminal Spawning Check
+	if !args.Idle && !args.Logout && !args.Update {
+		if args.Interactive || (args.Session == "" && IsInteractiveTerminal()) {
+			SetInteractiveSession(true)
+			tuiCfg := cliArgsToTUI(args)
+			wizardCfg, proceed := tui.RunWizard(tuiCfg)
+			if !proceed {
+				return
+			}
+			args = tuiToCLIArgs(wizardCfg, args)
+		} else if args.Session == "" && !IsInteractiveTerminal() && !IsCIOrDaemon() {
+			spawned, err := SpawnTerminal()
+			if err == nil && spawned {
+				return
+			}
+		}
+	}
+
+	if args.RedisURL != "" {
+		cache.Init(args.RedisURL)
+	}
+
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
+
+	// Launch Agentic TUI Dashboard if in an interactive terminal and not disabled
+	shouldRunTUI := !args.NoTUI && !args.Logout && (args.TUI || IsInteractiveTerminal() || IsInteractiveSession()) && !IsCIOrDaemon()
+
+	if shouldRunTUI {
+		startBotFunc := func(botCtx context.Context, cfg tui.Config, logWriter io.Writer, pairCodeChan chan<- string) (tui.BotController, error) {
+			clientType, ok := whatsrook.ParseClientType(cfg.Client)
+			if !ok {
+				clientType = whatsrook.ClientChrome
+			}
+
+			bot := NewBot(BotConfig{
+				Session:         cfg.Session,
+				Pair:            cfg.Pair,
+				QRCode:          cfg.QRCode,
+				Logout:          cfg.Logout,
+				Verbose:         cfg.Verbose,
+				ClientType:      clientType,
+				Database:        cfg.Database,
+				WSPort:          cfg.Port,
+				SkipOldMessages: cfg.SkipOldMessages,
+				AsyncMessageAck: true,
+				ConsoleOut:      logWriter,
+			})
+
+			go func() {
+				if cfg.Session == "" {
+					_ = runIdleMode(botCtx, cfg.Port)
+				} else {
+					_ = bot.Start(botCtx)
+				}
+			}()
+
+			return bot, nil
+		}
+
+		if err := tui.RunDashboard(ctx, cliArgsToTUI(args), startBotFunc); err != nil && !errors.Is(err, context.Canceled) {
+			Logger.Error("dashboard error", "err", err)
+			PromptExit()
+			os.Exit(1)
+		}
+		return
+	}
 
 	if args.Session == "" {
 		if err := runIdleMode(ctx, args.Port); err != nil {
 			Logger.Error("idle server error", "err", err)
+			PromptExit()
 			os.Exit(1)
 		}
 		return
@@ -126,6 +198,7 @@ func main() {
 	clientType, ok := whatsrook.ParseClientType(args.Client)
 	if !ok {
 		fmt.Fprintf(os.Stderr, "Error: unknown --client %q. Valid options: chrome, android, ios\n", args.Client)
+		PromptExit()
 		os.Exit(1)
 	}
 
@@ -150,11 +223,13 @@ func main() {
 			Logger.Info("Session was logged out and removed. Switching to idle standby mode...")
 			if err := runIdleMode(ctx, args.Port); err != nil {
 				Logger.Error("idle server error", "err", err)
+				PromptExit()
 				os.Exit(1)
 			}
 			return
 		}
 		Logger.Error("bot error", "err", err)
+		PromptExit()
 		os.Exit(1)
 	}
 }
@@ -224,4 +299,39 @@ func runIdleMode(ctx context.Context, port int) error {
 			return nil
 		}
 	}
+}
+
+func cliArgsToTUI(args CLIArgs) tui.Config {
+	return tui.Config{
+		Session:         args.Session,
+		Pair:            args.Pair,
+		QRCode:          args.QRCode,
+		Client:          args.Client,
+		Database:        args.Database,
+		RedisURL:        args.RedisURL,
+		Port:            args.Port,
+		SkipOldMessages: args.SkipOldMessages,
+		Verbose:         args.Verbose,
+		Interactive:     args.Interactive,
+		Idle:            args.Idle,
+		Logout:          args.Logout,
+		NoTUI:           args.NoTUI,
+		TUI:             args.TUI,
+	}
+}
+
+func tuiToCLIArgs(cfg tui.Config, original CLIArgs) CLIArgs {
+	original.Session = cfg.Session
+	original.Pair = cfg.Pair
+	original.QRCode = cfg.QRCode
+	original.Client = cfg.Client
+	original.Database = cfg.Database
+	original.RedisURL = cfg.RedisURL
+	original.Port = cfg.Port
+	original.SkipOldMessages = cfg.SkipOldMessages
+	original.Verbose = cfg.Verbose
+	original.Interactive = cfg.Interactive
+	original.Idle = cfg.Idle
+	original.Logout = cfg.Logout
+	return original
 }

@@ -1,6 +1,3 @@
-// Copyright (c) 2022 Tulir Asokan
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
@@ -32,12 +29,12 @@ import (
 	"go.mau.fi/util/random"
 	"google.golang.org/protobuf/proto"
 
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/proto/waAICommon"
-	"go.mau.fi/whatsmeow/proto/waCommon"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
+	waBinary "wa-core/binary"
+	"wa-core/proto/waAICommon"
+	"wa-core/proto/waCommon"
+	"wa-core/proto/waE2E"
+	"wa-core/types"
+	"wa-core/types/events"
 )
 
 const WebMessageIDPrefix = "3EB0"

@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"go.mau.fi/whatsmeow"
+	"wa-core"
 )
 
 // GetQRChannel returns the QR channel for pairing.

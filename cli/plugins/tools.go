@@ -16,11 +16,11 @@ import (
 	"time"
 	"whatsrook/logger"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/appstate"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/proto/waSyncAction"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core"
+	"wa-core/appstate"
+	"wa-core/proto/waE2E"
+	"wa-core/proto/waSyncAction"
+	"wa-core/types"
 
 	cliutils "whatsrook/cli/utils"
 	"whatsrook/utils"

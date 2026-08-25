@@ -14,19 +14,19 @@ import (
 
 	"github.com/polymorfa/libsignal-protocol-go/keys/prekey"
 
-	"go.mau.fi/whatsmeow/appstate"
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/proto/waCommon"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/proto/waHistorySync"
-	"go.mau.fi/whatsmeow/proto/waMsgApplication"
-	"go.mau.fi/whatsmeow/proto/waMsgTransport"
-	"go.mau.fi/whatsmeow/proto/waServerSync"
-	"go.mau.fi/whatsmeow/socket"
-	"go.mau.fi/whatsmeow/store"
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
-	"go.mau.fi/whatsmeow/util/keys"
+	"wa-core/appstate"
+	waBinary "wa-core/binary"
+	"wa-core/proto/waCommon"
+	"wa-core/proto/waE2E"
+	"wa-core/proto/waHistorySync"
+	"wa-core/proto/waMsgApplication"
+	"wa-core/proto/waMsgTransport"
+	"wa-core/proto/waServerSync"
+	"wa-core/socket"
+	"wa-core/store"
+	"wa-core/types"
+	"wa-core/types/events"
+	"wa-core/util/keys"
 )
 
 type DangerousInternalClient struct {

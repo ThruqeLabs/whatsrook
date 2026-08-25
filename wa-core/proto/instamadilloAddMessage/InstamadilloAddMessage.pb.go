@@ -7,18 +7,18 @@
 package instamadilloAddMessage
 
 import (
-	instamadilloCoreTypeActionLog "go.mau.fi/whatsmeow/proto/instamadilloCoreTypeActionLog"
-	instamadilloCoreTypeAdminMessage "go.mau.fi/whatsmeow/proto/instamadilloCoreTypeAdminMessage"
-	instamadilloCoreTypeCollection "go.mau.fi/whatsmeow/proto/instamadilloCoreTypeCollection"
-	instamadilloCoreTypeLink "go.mau.fi/whatsmeow/proto/instamadilloCoreTypeLink"
-	instamadilloCoreTypeMedia "go.mau.fi/whatsmeow/proto/instamadilloCoreTypeMedia"
-	instamadilloCoreTypeText "go.mau.fi/whatsmeow/proto/instamadilloCoreTypeText"
-	instamadilloXmaContentRef "go.mau.fi/whatsmeow/proto/instamadilloXmaContentRef"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	instamadilloCoreTypeActionLog "wa-core/proto/instamadilloCoreTypeActionLog"
+	instamadilloCoreTypeAdminMessage "wa-core/proto/instamadilloCoreTypeAdminMessage"
+	instamadilloCoreTypeCollection "wa-core/proto/instamadilloCoreTypeCollection"
+	instamadilloCoreTypeLink "wa-core/proto/instamadilloCoreTypeLink"
+	instamadilloCoreTypeMedia "wa-core/proto/instamadilloCoreTypeMedia"
+	instamadilloCoreTypeText "wa-core/proto/instamadilloCoreTypeText"
+	instamadilloXmaContentRef "wa-core/proto/instamadilloXmaContentRef"
 )
 
 const (

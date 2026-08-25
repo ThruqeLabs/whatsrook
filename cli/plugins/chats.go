@@ -6,12 +6,12 @@ import (
 	"time"
 	"whatsrook/utils"
 
-	"go.mau.fi/whatsmeow/appstate"
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/proto/waCommon"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
+	"wa-core/appstate"
+	waBinary "wa-core/binary"
+	"wa-core/proto/waCommon"
+	"wa-core/proto/waE2E"
+	"wa-core/types"
+	"wa-core/types/events"
 )
 
 func init() {
@@ -460,7 +460,6 @@ func handleReport(ctx *Context) error {
 	}
 
 	for i := 0; i < count; i++ {
-		//lint:ignore SA1019 intentional use of internal API for spam reporting
 		reqID := ctx.Client.DangerousInternals().GenerateRequestID()
 
 		iqNode := waBinary.Node{
@@ -480,7 +479,6 @@ func handleReport(ctx *Context) error {
 			},
 		}
 
-		//lint:ignore SA1019 intentional use of internal API for spam reporting
 		_, err := ctx.Client.DangerousInternals().SendNodeAndGetData(ctx.Ctx, iqNode)
 		if err != nil {
 			return ctx.Replyf("Failed to submit spam report on iteration %d: %s", i+1, err.Error())

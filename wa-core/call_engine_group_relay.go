@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"sync"
 
-	"go.mau.fi/whatsmeow/rtp"
-	"go.mau.fi/whatsmeow/stun"
+	"wa-core/rtp"
+	"wa-core/stun"
 )
 
 type groupRelayAllocateState struct {

@@ -7,14 +7,14 @@
 package waGroupHistory
 
 import (
-	waCommon "go.mau.fi/whatsmeow/proto/waCommon"
-	waE2E "go.mau.fi/whatsmeow/proto/waE2E"
-	waWeb "go.mau.fi/whatsmeow/proto/waWeb"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	waCommon "wa-core/proto/waCommon"
+	waE2E "wa-core/proto/waE2E"
+	waWeb "wa-core/proto/waWeb"
 )
 
 const (

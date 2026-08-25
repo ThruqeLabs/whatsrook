@@ -1,4 +1,4 @@
-package cliutils
+package fun
 
 import (
 	"context"

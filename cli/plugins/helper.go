@@ -4,9 +4,9 @@ import (
 	"context"
 	"strings"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core"
+	"wa-core/store/sqlstore"
+	"wa-core/types"
 
 	clistore "whatsrook/cli/store"
 	"whatsrook/utils"
@@ -97,14 +97,6 @@ func sendInteractiveButtonsWithMentions(ctx *Context, bodyText, footerText strin
 
 func sendInteractiveButtons(ctx *Context, bodyText, footerText string, buttons []struct{ ID, Text string }) error {
 	return sendInteractiveButtonsWithMentions(ctx, bodyText, footerText, buttons, nil)
-}
-
-func sendInteractiveButtonsWithID(ctx *Context, bodyText, footerText string, buttons []struct{ ID, Text string }) (types.MessageID, error) {
-	builder := ctx.Rook().NewButton(bodyText).Footer(footerText)
-	for _, b := range buttons {
-		builder.Add(b.ID, b.Text)
-	}
-	return builder.SendWithID(ctx.Chat)
 }
 
 func isWordPrefix(s string) bool {

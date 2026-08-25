@@ -7,9 +7,9 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"go.mau.fi/whatsmeow/rtp"
-	"go.mau.fi/whatsmeow/types"
 	"google.golang.org/protobuf/encoding/protowire"
+	"wa-core/rtp"
+	"wa-core/types"
 )
 
 const (

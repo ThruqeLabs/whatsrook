@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"time"
 
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/types"
+	waBinary "wa-core/binary"
+	"wa-core/types"
 )
 
 // CallControlEnvelope is the routing metadata and sole action in a raw call node.
@@ -26,7 +26,6 @@ type CallControlEnvelope struct {
 // ParseCallControlEnvelope extracts an upstream-unknown call action without
 // depending on fork-only whatsmeow events.
 func ParseCallControlEnvelope(node *waBinary.Node) (*CallControlEnvelope, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/e9a033b24933681519c70b9237db3e91e93e4265/call.go#L19-L40
 	if node == nil || node.Tag != "call" {
 		return nil, fmt.Errorf("signaling: parse call control envelope: unexpected node")
 	}

@@ -4,22 +4,24 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
 
-	"whatsrook/logger"
+	Logger "whatsrook/logger"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/proto/waCompanionReg"
-	"go.mau.fi/whatsmeow/proto/waWa6"
-	"go.mau.fi/whatsmeow/store"
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	"go.mau.fi/whatsmeow/types"
 	"whatsrook/utils"
 	"whatsrook/utils/cache"
+
+	"wa-core"
+	"wa-core/proto/waCompanionReg"
+	"wa-core/proto/waWa6"
+	"wa-core/store"
+	"wa-core/store/sqlstore"
+	"wa-core/types"
 
 	_ "github.com/lib/pq"
 	_ "modernc.org/sqlite"
@@ -56,7 +58,8 @@ type Config struct {
 	ClientType      ClientType
 	Verbose         bool
 	SkipOldMessages bool
-	AsyncMessageAck bool // If true, SendMessage will return immediately after writing to the socket and process server ACKs in the background.
+	AsyncMessageAck bool      // If true, SendMessage will return immediately after writing to the socket and process server ACKs in the background.
+	ConsoleOut      io.Writer // Optional custom console writer (e.g. for TUI log streaming)
 }
 
 // Abstraction over the whatsmeow WhatsApp client and store container.
@@ -121,8 +124,14 @@ func (c *Client) InitSession(ctx context.Context) error {
 	}
 
 	// Logs go into DataDir/logs/ — shared across all sessions.
-	if err := utils.InitLogger(c.Config.DataDir, c.Config.Verbose); err != nil {
-		return fmt.Errorf("failed to initialize logger: %w", err)
+	if c.Config.ConsoleOut != nil {
+		if err := utils.InitLoggerWithOutput(c.Config.DataDir, c.Config.Verbose, c.Config.ConsoleOut); err != nil {
+			return fmt.Errorf("failed to initialize logger: %w", err)
+		}
+	} else {
+		if err := utils.InitLogger(c.Config.DataDir, c.Config.Verbose); err != nil {
+			return fmt.Errorf("failed to initialize logger: %w", err)
+		}
 	}
 
 	waLevel := "INFO"
@@ -146,7 +155,7 @@ func (c *Client) InitSession(ctx context.Context) error {
 	}
 	deviceStore.ExternalCache = cache.Default()
 
-	clientLog := utils.WhatsmeowStyle("Client", "INFO", true)
+	clientLog := utils.WhatsrookLog("Client", "INFO", true)
 	rawClient := whatsmeow.NewClient(deviceStore, clientLog)
 	rawClient.AsyncMessageAck = c.Config.AsyncMessageAck
 
@@ -312,7 +321,7 @@ func ensureSSLDisabled(rawURL string) string {
 }
 
 func (c *Client) initStore(ctx context.Context, dbPath, waLevel string) (*sqlstore.Container, error) {
-	dbLog := utils.WhatsmeowStyle("Database", waLevel, true)
+	dbLog := utils.WhatsrookLog("Database", waLevel, true)
 
 	dbConn := c.Config.Database
 	if dbConn == "" {

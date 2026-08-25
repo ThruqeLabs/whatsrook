@@ -6,18 +6,16 @@ import (
 	"errors"
 	"io"
 	"os"
-
-	"os/exec"
 	"slices"
 	"strings"
 	"sync"
 	"time"
 	"whatsrook/logger"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core"
+	"wa-core/proto/waE2E"
+	"wa-core/store/sqlstore"
+	"wa-core/types"
 
 	"whatsrook/cli/updater"
 	cliutils "whatsrook/cli/utils"
@@ -327,19 +325,8 @@ func handleSh(ctx *Context) error {
 	}
 	cliutils.ActiveShellSessionsMu.Unlock()
 
-	shell := "bash"
-	if _, err := exec.LookPath("bash"); err != nil {
-		shell = "sh"
-	}
-
-	// If stdbuf exists, use it to force unbuffered / line-buffered stdout and stderr
-	execCmdStr := commandStr
-	if _, err := exec.LookPath("stdbuf"); err == nil {
-		execCmdStr = "stdbuf -oL -eL " + commandStr
-	}
-
 	execCtx, cancel := context.WithTimeout(context.Background(), 15*time.Minute)
-	cmd := exec.CommandContext(execCtx, shell, "-c", execCmdStr)
+	cmd := cliutils.BuildShellCmd(execCtx, commandStr)
 
 	// Set unbuffered terminal environment variables
 	cmd.Env = append(os.Environ(),

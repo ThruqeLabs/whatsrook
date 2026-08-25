@@ -8,18 +8,18 @@ import (
 	"errors"
 	"fmt"
 	"github.com/rs/zerolog"
-	"go.mau.fi/whatsmeow/diag"
-	"go.mau.fi/whatsmeow/signaling"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+	"wa-core/diag"
+	"wa-core/signaling"
 
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
 	"google.golang.org/protobuf/proto"
+	waBinary "wa-core/binary"
+	"wa-core/proto/waE2E"
+	"wa-core/types"
+	"wa-core/types/events"
 )
 
 // engine is the internal media + signaling engine behind Client/Call. It owns the
@@ -123,7 +123,6 @@ func newEngine(c *Client) *engine {
 }
 
 func (e *engine) requireRawCallAdapter() error {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/e9a033b24933cc8d90fa5ff8991b1268ba80a140/client.go#L110-L120
 	if e == nil || e.c == nil {
 		return errors.New("wacaller: raw call adapter is unavailable")
 	}

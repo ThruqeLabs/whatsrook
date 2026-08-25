@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
+	"wa-core/types"
+	"wa-core/types/events"
 	commands "whatsrook/cli/plugins"
 )
 
@@ -206,6 +206,25 @@ func TestParseCLIArgs_OverridesEnv(t *testing.T) {
 	args7 := parseCLIArgsFrom([]string{})
 	if args7.RedisURL != "redis://localhost:6379/1" {
 		t.Errorf("expected RedisURL from env var, got %q", args7.RedisURL)
+	}
+
+	// Case 8: -i / --interactive flag
+	args8 := parseCLIArgsFrom([]string{"-i"})
+	if !args8.Interactive {
+		t.Errorf("expected Interactive=true when -i passed, got false")
+	}
+
+	// Case 9: --idle / --standby flag
+	args9 := parseCLIArgsFrom([]string{"--idle"})
+	if !args9.Idle {
+		t.Errorf("expected Idle=true when --idle passed, got false")
+	}
+
+	// Case 10: INTERACTIVE env var
+	t.Setenv("INTERACTIVE", "true")
+	args10 := parseCLIArgsFrom([]string{})
+	if !args10.Interactive {
+		t.Errorf("expected Interactive=true when INTERACTIVE=true env var set, got false")
 	}
 }
 

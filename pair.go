@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"go.mau.fi/whatsmeow"
+	"wa-core"
 )
 
 // ErrPairTimeout is returned when Whatsmeow fails to complete the pairing

@@ -5,8 +5,8 @@ import (
 	"math"
 	"strconv"
 
-	"go.mau.fi/whatsmeow/binary/token"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/binary/token"
+	"wa-core/types"
 )
 
 type binaryEncoder struct {

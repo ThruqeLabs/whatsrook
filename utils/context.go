@@ -8,9 +8,9 @@ import (
 	"time"
 	"unicode"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
+	"wa-core"
+	"wa-core/types"
+	"wa-core/types/events"
 )
 
 // PluginContext is passed to every command handler.

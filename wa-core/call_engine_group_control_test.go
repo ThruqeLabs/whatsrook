@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"github.com/rs/zerolog"
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/signaling"
-	"go.mau.fi/whatsmeow/types"
+	waBinary "wa-core/binary"
+	"wa-core/signaling"
+	"wa-core/types"
 )
 
 func testGroupEngine(callID string) (*engine, *Call, types.JID) {

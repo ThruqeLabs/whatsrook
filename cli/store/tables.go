@@ -9,7 +9,7 @@ import (
 	"whatsrook/logger"
 
 	"go.mau.fi/util/dbutil"
-	"go.mau.fi/whatsmeow/store/sqlstore"
+	"wa-core/store/sqlstore"
 )
 
 var tablesInitOnce sync.Once

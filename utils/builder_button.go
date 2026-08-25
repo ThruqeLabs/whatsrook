@@ -6,10 +6,10 @@ import (
 
 	"whatsrook/logger"
 
-	"go.mau.fi/whatsmeow"
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core"
+	waBinary "wa-core/binary"
+	"wa-core/proto/waE2E"
+	"wa-core/types"
 )
 
 // ButtonBuilder builds and sends an interactive WhatsApp button message
@@ -112,11 +112,6 @@ func (b *ButtonBuilder) registerHandlers(once bool, fn func(req ButtonRequest, r
 	for _, btn := range b.buttons {
 		RegisterButtonHandler(btn.ID, once, fn)
 	}
-}
-
-func (b *ButtonBuilder) sendMsg(to types.JID) error {
-	_, err := b.sendMsgWithID(to)
-	return err
 }
 
 func (b *ButtonBuilder) sendMsgWithID(to types.JID) (types.MessageID, error) {

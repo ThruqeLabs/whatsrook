@@ -7,20 +7,20 @@
 package waE2E
 
 import (
-	waAICommon "go.mau.fi/whatsmeow/proto/waAICommon"
-	waAICommonDeprecated "go.mau.fi/whatsmeow/proto/waAICommonDeprecated"
-	waAdv "go.mau.fi/whatsmeow/proto/waAdv"
-	waAea "go.mau.fi/whatsmeow/proto/waAea"
-	waCommon "go.mau.fi/whatsmeow/proto/waCommon"
-	waCompanionReg "go.mau.fi/whatsmeow/proto/waCompanionReg"
-	waMmsRetry "go.mau.fi/whatsmeow/proto/waMmsRetry"
-	waServerSync "go.mau.fi/whatsmeow/proto/waServerSync"
-	waStatusAttributions "go.mau.fi/whatsmeow/proto/waStatusAttributions"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	waAICommon "wa-core/proto/waAICommon"
+	waAICommonDeprecated "wa-core/proto/waAICommonDeprecated"
+	waAdv "wa-core/proto/waAdv"
+	waAea "wa-core/proto/waAea"
+	waCommon "wa-core/proto/waCommon"
+	waCompanionReg "wa-core/proto/waCompanionReg"
+	waMmsRetry "wa-core/proto/waMmsRetry"
+	waServerSync "wa-core/proto/waServerSync"
+	waStatusAttributions "wa-core/proto/waStatusAttributions"
 )
 
 const (

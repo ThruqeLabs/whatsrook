@@ -1,6 +1,3 @@
-// Copyright (c) 2021 Tulir Asokan
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
@@ -14,18 +11,18 @@ import (
 
 	"go.mau.fi/util/jsontime"
 
-	waBinary "go.mau.fi/whatsmeow/binary"
-	armadillo "go.mau.fi/whatsmeow/proto"
-	"go.mau.fi/whatsmeow/proto/instamadilloTransportPayload"
-	"go.mau.fi/whatsmeow/proto/waArmadilloApplication"
-	"go.mau.fi/whatsmeow/proto/waCompanionReg"
-	"go.mau.fi/whatsmeow/proto/waConsumerApplication"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/proto/waHistorySync"
-	"go.mau.fi/whatsmeow/proto/waMsgApplication"
-	"go.mau.fi/whatsmeow/proto/waMsgTransport"
-	"go.mau.fi/whatsmeow/proto/waWeb"
-	"go.mau.fi/whatsmeow/types"
+	waBinary "wa-core/binary"
+	armadillo "wa-core/proto"
+	"wa-core/proto/instamadilloTransportPayload"
+	"wa-core/proto/waArmadilloApplication"
+	"wa-core/proto/waCompanionReg"
+	"wa-core/proto/waConsumerApplication"
+	"wa-core/proto/waE2E"
+	"wa-core/proto/waHistorySync"
+	"wa-core/proto/waMsgApplication"
+	"wa-core/proto/waMsgTransport"
+	"wa-core/proto/waWeb"
+	"wa-core/types"
 )
 
 // QR is emitted after connecting when there's no session data in the device store.

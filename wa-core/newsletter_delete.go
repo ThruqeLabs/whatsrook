@@ -1,5 +1,3 @@
-// Copyright (c) 2026 Rajeh Taher
-//
 // Licensed under the MIT License. See LICENSE-MIT for details.
 
 package whatsmeow
@@ -9,8 +7,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"go.mau.fi/whatsmeow/mex"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/mex"
+	"wa-core/types"
 )
 
 type deleteNewsletterVariables struct {

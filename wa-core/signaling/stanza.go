@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/rs/zerolog"
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/types"
+	waBinary "wa-core/binary"
+	"wa-core/types"
 )
 
 // Outbound call-signaling builders (offer/accept/preaccept/transport/relaylatency/

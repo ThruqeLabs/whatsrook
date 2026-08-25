@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog"
-	"go.mau.fi/whatsmeow/callutil"
+	"wa-core/callutil"
 )
 
 // SSRC derivation and participant-LID helpers for E2E HKDF info.

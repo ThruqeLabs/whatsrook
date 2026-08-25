@@ -87,7 +87,7 @@ func TestNamedAndWith(t *testing.T) {
 }
 
 func TestWaLoggerAdapter(t *testing.T) {
-	wa := WhatsmeowStyle("WaClient", "DEBUG", true)
+	wa := WhatsrookLog("WaClient", "DEBUG", true)
 	if wa == nil {
 		t.Fatal("expected waLog.Logger, got nil")
 	}

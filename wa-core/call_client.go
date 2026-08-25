@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog"
-	"go.mau.fi/whatsmeow/diag"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/diag"
+	"wa-core/types"
 )
 
 // CallOptions controls media negotiated for an outbound call.

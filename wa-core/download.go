@@ -1,6 +1,3 @@
-// Copyright (c) 2021 Tulir Asokan
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
@@ -24,14 +21,14 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/proto/waHistorySync"
-	"go.mau.fi/whatsmeow/proto/waMediaTransport"
-	"go.mau.fi/whatsmeow/proto/waServerSync"
-	"go.mau.fi/whatsmeow/socket"
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/util/cbcutil"
-	"go.mau.fi/whatsmeow/util/hkdfutil"
+	"wa-core/proto/waE2E"
+	"wa-core/proto/waHistorySync"
+	"wa-core/proto/waMediaTransport"
+	"wa-core/proto/waServerSync"
+	"wa-core/socket"
+	"wa-core/types"
+	"wa-core/util/cbcutil"
+	"wa-core/util/hkdfutil"
 )
 
 // MediaType represents a type of uploaded file on WhatsApp.

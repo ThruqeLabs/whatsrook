@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 )
 
 func TestGroupStateSnapshotsOwnNestedSlicesAndRejectStaleTransactions(t *testing.T) {

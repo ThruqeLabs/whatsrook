@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"go.mau.fi/whatsmeow/diag"
-	"go.mau.fi/whatsmeow/rtp"
+	"wa-core/diag"
+	"wa-core/rtp"
 )
 
 func TestVideoRtpDurationSamples(t *testing.T) {

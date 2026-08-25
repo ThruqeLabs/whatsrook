@@ -5,9 +5,9 @@ import (
 	"errors"
 	"testing"
 
-	"go.mau.fi/whatsmeow/rtp"
-	"go.mau.fi/whatsmeow/stun"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/rtp"
+	"wa-core/stun"
+	"wa-core/types"
 )
 
 func TestGroupRelayDataSelectsCaptureAddressAndCredentials(t *testing.T) {

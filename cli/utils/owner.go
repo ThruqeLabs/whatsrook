@@ -6,12 +6,13 @@ import (
 	"io"
 	"os/exec"
 	"regexp"
+	"runtime"
 	"slices"
 	"strings"
 	"sync"
 	"time"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 )
 
 var (
@@ -38,8 +39,52 @@ type ShellSession struct {
 	UserTerminated bool
 }
 
+// BuildShellCmd constructs an exec.Cmd appropriate for the host operating system.
+func BuildShellCmd(ctx context.Context, commandStr string) *exec.Cmd {
+	if runtime.GOOS == "windows" {
+		if _, err := exec.LookPath("pwsh.exe"); err == nil {
+			return exec.CommandContext(ctx, "pwsh.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", commandStr)
+		}
+		if _, err := exec.LookPath("pwsh"); err == nil {
+			return exec.CommandContext(ctx, "pwsh", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", commandStr)
+		}
+		if _, err := exec.LookPath("powershell.exe"); err == nil {
+			return exec.CommandContext(ctx, "powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", commandStr)
+		}
+		if _, err := exec.LookPath("powershell"); err == nil {
+			return exec.CommandContext(ctx, "powershell", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", commandStr)
+		}
+		if _, err := exec.LookPath("cmd.exe"); err == nil {
+			return exec.CommandContext(ctx, "cmd.exe", "/c", commandStr)
+		}
+		if _, err := exec.LookPath("cmd"); err == nil {
+			return exec.CommandContext(ctx, "cmd", "/c", commandStr)
+		}
+		if _, err := exec.LookPath("bash.exe"); err == nil {
+			return exec.CommandContext(ctx, "bash.exe", "-c", commandStr)
+		}
+		if _, err := exec.LookPath("bash"); err == nil {
+			return exec.CommandContext(ctx, "bash", "-c", commandStr)
+		}
+		return exec.CommandContext(ctx, "powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", commandStr)
+	}
+
+	shell := "bash"
+	if _, err := exec.LookPath("bash"); err != nil {
+		shell = "sh"
+	}
+
+	execCmdStr := commandStr
+	if _, err := exec.LookPath("stdbuf"); err == nil {
+		execCmdStr = "stdbuf -oL -eL " + commandStr
+	}
+
+	return exec.CommandContext(ctx, shell, "-c", execCmdStr)
+}
+
 func CleanShellOutput(raw string) string {
 	cleaned := AnsiEscapeRegex.ReplaceAllString(raw, "")
+	cleaned = strings.ReplaceAll(cleaned, "\r\n", "\n")
 	lines := strings.Split(cleaned, "\n")
 	var resultLines []string
 	for _, line := range lines {

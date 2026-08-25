@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/signaling"
-	"go.mau.fi/whatsmeow/types"
+	waBinary "wa-core/binary"
+	"wa-core/signaling"
+	"wa-core/types"
 )
 
 func (e *engine) placeGroupCall(
@@ -344,7 +344,6 @@ func selectedGroupCallState(targets []types.JID) *GroupCallState {
 }
 
 func (e *engine) createPublicCallLink(ctx context.Context, media callLinkMedia) (*callLinkCreateResult, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/call_link.go#L17-L50
 	if err := e.requireRawCallAdapter(); err != nil {
 		return nil, err
 	}
@@ -369,7 +368,6 @@ func (e *engine) previewPublicCallLink(
 	token string,
 	media callLinkMedia,
 ) (*callLinkPreviewResult, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/call_link.go#L52-L74
 	if err := e.requireRawCallAdapter(); err != nil {
 		return nil, err
 	}
@@ -398,7 +396,6 @@ func (e *engine) joinPublicCallLink(
 	token string,
 	opts CallLinkOptions,
 ) (*Call, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/call_link.go#L76-L155
 	if err := e.requireRawCallAdapter(); err != nil {
 		return nil, err
 	}
@@ -463,7 +460,6 @@ func (e *engine) joinPublicCallLink(
 }
 
 func (e *engine) requestCall(ctx context.Context, node waBinary.Node, requestID string) (*waBinary.Node, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/e9a033b24933681519c70b9237db3e91e93e4265/client.go#L745-L759
 	if e.requestCallNode == nil {
 		return nil, errors.New("wacaller: call request transport is unavailable")
 	}
@@ -471,7 +467,6 @@ func (e *engine) requestCall(ctx context.Context, node waBinary.Node, requestID 
 }
 
 func (e *engine) setApprovalRequired(ctx context.Context, callID string, enabled bool) error {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/call_link.go#L316-L386
 	if err := e.requireRawCallAdapter(); err != nil {
 		return err
 	}
@@ -488,7 +483,6 @@ func (e *engine) controlWaitingParticipant(
 	callID, user string,
 	admit bool,
 ) error {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/call_link.go#L321-L386
 	if err := e.requireRawCallAdapter(); err != nil {
 		return err
 	}
@@ -594,7 +588,6 @@ func (e *engine) callControlCreator(callID string) (types.JID, error) {
 }
 
 func (e *engine) startWaitingRoomHeartbeat(callID string) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/call_link.go#L215-L259
 	e.mu.Lock()
 	m := e.calls[callID]
 	if m == nil || m.call == nil {

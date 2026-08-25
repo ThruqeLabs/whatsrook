@@ -1,10 +1,10 @@
-package cliutils
+package meta
 
 import (
 	"strings"
 	"testing"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 )
 
 func TestRenderUserContext(t *testing.T) {

@@ -3,7 +3,7 @@ package plugins
 import (
 	"strings"
 
-	"go.mau.fi/whatsmeow"
+	"wa-core"
 	cliutils "whatsrook/cli/utils"
 	"whatsrook/utils"
 )

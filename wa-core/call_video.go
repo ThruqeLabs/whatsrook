@@ -6,7 +6,7 @@ import (
 	"os"
 	"sync"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 )
 
 // Video in wacaller is encoded H.264, carried as Annex-B access units (one frame's worth

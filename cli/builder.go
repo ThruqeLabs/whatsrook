@@ -3,7 +3,7 @@ package main
 import (
 	"whatsrook/utils"
 
-	"go.mau.fi/whatsmeow/types/events"
+	"wa-core/types/events"
 )
 
 func buildIncomingMessagePayload(v *events.Message) IncomingMessagePayload {

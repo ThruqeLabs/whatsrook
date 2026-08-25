@@ -3,7 +3,7 @@ package cliutils
 import (
 	"sync"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 	clistore "whatsrook/cli/store"
 )
 

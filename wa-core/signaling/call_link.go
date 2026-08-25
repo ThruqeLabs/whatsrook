@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/types"
+	waBinary "wa-core/binary"
+	"wa-core/types"
 )
 
 // CallLinkMedia is the media mode encoded in a call link.
@@ -69,7 +69,6 @@ type WaitingRoomUser struct {
 
 // BuildCallLinkCreate builds the service request that creates a call link.
 func BuildCallLinkCreate(media CallLinkMedia, requestID string) (waBinary.Node, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L32-L41
 	if err := validateCallLinkMedia(media); err != nil {
 		return waBinary.Node{}, err
 	}
@@ -78,7 +77,6 @@ func BuildCallLinkCreate(media CallLinkMedia, requestID string) (waBinary.Node, 
 
 // BuildCallLinkQuery builds the service request that previews a call link.
 func BuildCallLinkQuery(token string, media CallLinkMedia, requestID string) (waBinary.Node, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L43-L58
 	if strings.TrimSpace(token) == "" {
 		return waBinary.Node{}, fmt.Errorf("signaling: call-link token is required")
 	}
@@ -92,7 +90,6 @@ func BuildCallLinkQuery(token string, media CallLinkMedia, requestID string) (wa
 
 // BuildCallLinkJoin builds the media-capability request that joins a link.
 func BuildCallLinkJoin(token string, media CallLinkMedia, requestID string) (waBinary.Node, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L60-L94
 	if strings.TrimSpace(token) == "" {
 		return waBinary.Node{}, fmt.Errorf("signaling: call-link token is required")
 	}
@@ -115,7 +112,6 @@ func BuildCallLinkJoin(token string, media CallLinkMedia, requestID string) (waB
 }
 
 func validateCallLinkMedia(media CallLinkMedia) error {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L12-L19
 	if media != CallLinkMediaAudio && media != CallLinkMediaVideo {
 		return fmt.Errorf("signaling: invalid call-link media %q", media)
 	}
@@ -123,7 +119,6 @@ func validateCallLinkMedia(media CallLinkMedia) error {
 }
 
 func buildCallServiceRequest(requestID string, action waBinary.Node) (waBinary.Node, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L21-L30
 	if requestID == "" {
 		return waBinary.Node{}, fmt.Errorf("signaling: call-link request ID is required")
 	}
@@ -135,7 +130,6 @@ func buildCallServiceRequest(requestID string, action waBinary.Node) (waBinary.N
 
 // BuildWaitingRoomToggle changes approval requirements for an active link call.
 func BuildWaitingRoomToggle(callID string, creator types.JID, enabled bool, requestID string) waBinary.Node {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L124-L143
 	value := "0"
 	if enabled {
 		value = "1"
@@ -145,20 +139,17 @@ func BuildWaitingRoomToggle(callID string, creator types.JID, enabled bool, requ
 
 // BuildWaitingRoomHeartbeat keeps a pending link join alive.
 func BuildWaitingRoomHeartbeat(callID string, creator types.JID, requestID string) waBinary.Node {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L145-L155
 	return buildWaitingRoomRequest("heartbeat", callID, creator, requestID, waBinary.Attrs{"type": "waiting_room"}, nil)
 }
 
 // BuildWaitingRoomAdmit admits one pending user.
 func BuildWaitingRoomAdmit(callID string, creator, user types.JID, requestID string) waBinary.Node {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L157-L171
 	return buildWaitingRoomRequest("waiting_room_admit", callID, creator, requestID, nil,
 		[]waBinary.Node{{Tag: "user", Attrs: waBinary.Attrs{"jid": user}}})
 }
 
 // BuildWaitingRoomDeny denies one pending user.
 func BuildWaitingRoomDeny(callID string, creator, user types.JID, requestID string) waBinary.Node {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L173-L187
 	return buildWaitingRoomRequest("waiting_room_deny", callID, creator, requestID, nil,
 		[]waBinary.Node{{Tag: "user", Attrs: waBinary.Attrs{"jid": user}}})
 }
@@ -170,7 +161,6 @@ func buildWaitingRoomRequest(
 	extraAttrs waBinary.Attrs,
 	children []waBinary.Node,
 ) waBinary.Node {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L96-L122
 	attrs := waBinary.Attrs{"call-id": callID, "call-creator": creator}
 	maps.Copy(attrs, extraAttrs)
 	return waBinary.Node{
@@ -181,7 +171,6 @@ func buildWaitingRoomRequest(
 
 // ParseCallLinkCreateAck parses a link_create ACK.
 func ParseCallLinkCreateAck(node *waBinary.Node) (*CallLink, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L230-L252
 	child, err := validateCallLinkAck(node, "link_create")
 	if err != nil {
 		return nil, err
@@ -203,7 +192,6 @@ func ParseCallLinkCreateAck(node *waBinary.Node) (*CallLink, error) {
 
 // ParseCallLinkQueryAck parses a link_query ACK.
 func ParseCallLinkQueryAck(node *waBinary.Node) (*CallLinkPreview, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L254-L285
 	child, err := validateCallLinkAck(node, "link_query")
 	if err != nil {
 		return nil, err
@@ -232,7 +220,6 @@ func ParseCallLinkQueryAck(node *waBinary.Node) (*CallLinkPreview, error) {
 
 // ParseCallLinkJoinAck parses either direct admission or waiting-room state.
 func ParseCallLinkJoinAck(node *waBinary.Node) (*CallLinkJoin, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L332-L373
 	if err := validateCallLinkAckEnvelope(node, "link_join"); err != nil {
 		return nil, err
 	}
@@ -269,7 +256,6 @@ func ParseCallLinkJoinAck(node *waBinary.Node) (*CallLinkJoin, error) {
 
 // ParseWaitingRoomUpdate parses one authoritative waiting-room update action.
 func ParseWaitingRoomUpdate(node *waBinary.Node) (*WaitingRoom, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L375-L398
 	if node == nil || node.Tag != "waiting_room_update" {
 		return nil, fmt.Errorf("signaling: parse waiting room update: unexpected node")
 	}
@@ -294,7 +280,6 @@ func ParseWaitingRoomUpdate(node *waBinary.Node) (*WaitingRoom, error) {
 
 // BuildWaitingRoomUpdateAck builds the typed ACK required by a waiting-room update.
 func BuildWaitingRoomUpdateAck(node *waBinary.Node) (waBinary.Node, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L400-L424
 	if node == nil || node.Tag != "call" {
 		return waBinary.Node{}, fmt.Errorf("signaling: build waiting room ACK: unexpected node")
 	}
@@ -313,7 +298,6 @@ func BuildWaitingRoomUpdateAck(node *waBinary.Node) (waBinary.Node, error) {
 }
 
 func parseWaitingRoomNode(node *waBinary.Node) (*WaitingRoom, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L287-L330
 	if node == nil || node.Tag != "waiting_room" {
 		return nil, fmt.Errorf("signaling: parse waiting room: unexpected node")
 	}
@@ -355,7 +339,6 @@ func parseWaitingRoomNode(node *waBinary.Node) (*WaitingRoom, error) {
 }
 
 func validateCallLinkAckEnvelope(node *waBinary.Node, expectedType string) error {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L189-L205
 	if node == nil {
 		return fmt.Errorf("signaling: parse %s ACK: nil node", expectedType)
 	}
@@ -367,7 +350,6 @@ func validateCallLinkAckEnvelope(node *waBinary.Node, expectedType string) error
 }
 
 func validateCallLinkAck(node *waBinary.Node, expectedType string) (*waBinary.Node, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L207-L216
 	if err := validateCallLinkAckEnvelope(node, expectedType); err != nil {
 		return nil, err
 	}
@@ -379,7 +361,6 @@ func validateCallLinkAck(node *waBinary.Node, expectedType string) (*waBinary.No
 }
 
 func parseCallLinkMedia(value string) (CallLinkMedia, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L218-L224
 	media := CallLinkMedia(value)
 	if err := validateCallLinkMedia(media); err != nil {
 		return "", err

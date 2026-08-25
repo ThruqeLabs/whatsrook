@@ -8,7 +8,7 @@ import (
 	"errors"
 
 	"github.com/rs/zerolog"
-	"go.mau.fi/whatsmeow/callutil"
+	"wa-core/callutil"
 )
 
 // errShortKey is returned when the supplied key material is shorter than the

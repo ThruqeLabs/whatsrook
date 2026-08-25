@@ -7,14 +7,14 @@
 package waSyncAction
 
 import (
-	waChatLockSettings "go.mau.fi/whatsmeow/proto/waChatLockSettings"
-	waCommon "go.mau.fi/whatsmeow/proto/waCommon"
-	waDeviceCapabilities "go.mau.fi/whatsmeow/proto/waDeviceCapabilities"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	waChatLockSettings "wa-core/proto/waChatLockSettings"
+	waCommon "wa-core/proto/waCommon"
+	waDeviceCapabilities "wa-core/proto/waDeviceCapabilities"
 )
 
 const (

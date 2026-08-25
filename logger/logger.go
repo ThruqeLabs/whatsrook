@@ -14,7 +14,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	waLog "go.mau.fi/whatsmeow/util/log"
+	waLog "wa-core/util/log"
 )
 
 var (
@@ -59,8 +59,17 @@ func GetLevel() zapcore.Level {
 
 // InitLogger initializes the global logger with stdout and per-level log files in sessionDir/logs.
 func InitLogger(sessionDir string, verbose bool) error {
+	return InitLoggerWithOutput(sessionDir, verbose, os.Stdout)
+}
+
+// InitLoggerWithOutput initializes the global logger with custom console output and per-level log files in sessionDir/logs.
+func InitLoggerWithOutput(sessionDir string, verbose bool, consoleOut io.Writer) error {
 	mu.Lock()
 	defer mu.Unlock()
+
+	if consoleOut == nil {
+		consoleOut = os.Stdout
+	}
 
 	// Close any previously opened file handles
 	for _, f := range openFiles {
@@ -79,11 +88,11 @@ func InitLogger(sessionDir string, verbose bool) error {
 
 	var cores []zapcore.Core
 
-	// 1. Stdout console core with colors and custom format
+	// 1. Console core with colors and custom format
 	consoleEncoder := newConsoleEncoder(true)
 	stdoutCore := zapcore.NewCore(
 		consoleEncoder,
-		zapcore.Lock(os.Stdout),
+		zapcore.Lock(zapcore.AddSync(consoleOut)),
 		atomicLevel,
 	)
 	cores = append(cores, stdoutCore)
@@ -323,8 +332,8 @@ type zapWaLogger struct {
 	raw   *zap.Logger
 }
 
-// WhatsmeowStyle creates a fast waLog.Logger adapter with module prefix.
-func WhatsmeowStyle(module string, minLevel string, _ bool) waLog.Logger {
+// WhatsrookLog creates a fast waLog.Logger adapter with module prefix.
+func WhatsrookLog(module string, minLevel string, _ bool) waLog.Logger {
 	mu.RLock()
 	base := rawLogger
 	mu.RUnlock()
@@ -338,7 +347,7 @@ func WhatsmeowStyle(module string, minLevel string, _ bool) waLog.Logger {
 
 // NewWaLogger creates a waLog.Logger with the given module name.
 func NewWaLogger(module string) waLog.Logger {
-	return WhatsmeowStyle(module, "INFO", true)
+	return WhatsrookLog(module, "INFO", true)
 }
 
 func (z *zapWaLogger) Warnf(msg string, args ...any) {

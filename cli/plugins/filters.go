@@ -3,7 +3,7 @@ package plugins
 import (
 	"strings"
 
-	"go.mau.fi/whatsmeow/proto/waE2E"
+	"wa-core/proto/waE2E"
 	"whatsrook/utils"
 )
 

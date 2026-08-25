@@ -4,7 +4,7 @@ import (
 	"errors"
 	"sync"
 
-	"go.mau.fi/whatsmeow/relay"
+	"wa-core/relay"
 )
 
 // relayFanout runs one logical media channel across every usable relay in the

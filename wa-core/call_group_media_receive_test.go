@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"go.mau.fi/whatsmeow/rtp"
-	"go.mau.fi/whatsmeow/srtp"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/rtp"
+	"wa-core/srtp"
+	"wa-core/types"
 )
 
 type recordingParticipantDecoder struct {

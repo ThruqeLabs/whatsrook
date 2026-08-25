@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core"
+	"wa-core/types"
 	"whatsrook/utils"
 )
 

@@ -3,8 +3,8 @@ package whatsmeow
 import (
 	"bytes"
 
-	"go.mau.fi/whatsmeow/signaling"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/signaling"
+	"wa-core/types"
 )
 
 // groupCallUpdate is the control-plane-neutral form of one authoritative

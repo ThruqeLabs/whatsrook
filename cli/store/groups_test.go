@@ -7,7 +7,7 @@ import (
 
 	clistore "whatsrook/cli/store"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 )
 
 func TestSaveAndLoadCachedGroupsAndNewsletters(t *testing.T) {

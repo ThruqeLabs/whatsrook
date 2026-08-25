@@ -21,7 +21,7 @@ import (
 	"syscall"
 	"time"
 
-	"go.mau.fi/whatsmeow/store/sqlstore"
+	"wa-core/store/sqlstore"
 	"whatsrook"
 	clistore "whatsrook/cli/store"
 )

@@ -1,60 +1,40 @@
 package utils
 
 import (
-	"fmt"
+	"whatsrook/utils/formatting"
 )
 
-// Bold returns plain text without WhatsApp bold formatting symbols (*).
-func Bold(text string) string {
-	return text
-}
+var (
+	// Bold returns plain text without WhatsApp bold formatting symbols (*).
+	Bold = formatting.Bold
 
-// Boldf formats text according to format specifier without bold formatting symbols.
-func Boldf(format string, args ...any) string {
-	return fmt.Sprintf(format, args...)
-}
+	// Boldf formats text according to format specifier without bold formatting symbols.
+	Boldf = formatting.Boldf
 
-// Italic returns plain text without WhatsApp italic formatting symbols (_).
-func Italic(text string) string {
-	return text
-}
+	// Italic returns plain text without WhatsApp italic formatting symbols (_).
+	Italic = formatting.Italic
 
-// Italicf formats text according to format specifier without italic formatting symbols.
-func Italicf(format string, args ...any) string {
-	return fmt.Sprintf(format, args...)
-}
+	// Italicf formats text according to format specifier without italic formatting symbols.
+	Italicf = formatting.Italicf
 
-// Code returns plain text without WhatsApp inline code formatting symbols (`).
-func Code(text string) string {
-	return text
-}
+	// Code returns plain text without WhatsApp inline code formatting symbols (`).
+	Code = formatting.Code
 
-// Codef formats text according to format specifier without inline code formatting symbols.
-func Codef(format string, args ...any) string {
-	return fmt.Sprintf(format, args...)
-}
+	// Codef formats text according to format specifier without inline code formatting symbols.
+	Codef = formatting.Codef
 
-// CodeBlock returns plain text without WhatsApp code block formatting symbols (```).
-func CodeBlock(code string, lang ...string) string {
-	return code
-}
+	// CodeBlock returns plain text without WhatsApp code block formatting symbols (```).
+	CodeBlock = formatting.CodeBlock
 
-// Strike returns plain text without WhatsApp strikethrough formatting symbols (~).
-func Strike(text string) string {
-	return text
-}
+	// Strike returns plain text without WhatsApp strikethrough formatting symbols (~).
+	Strike = formatting.Strike
 
-// Strikef formats text according to format specifier without strikethrough formatting symbols.
-func Strikef(format string, args ...any) string {
-	return fmt.Sprintf(format, args...)
-}
+	// Strikef formats text according to format specifier without strikethrough formatting symbols.
+	Strikef = formatting.Strikef
 
-// Quote returns plain text without WhatsApp quote formatting symbols (>).
-func Quote(text string) string {
-	return text
-}
+	// Quote returns plain text without WhatsApp quote formatting symbols (>).
+	Quote = formatting.Quote
 
-// Quotef formats text according to format specifier without quote formatting symbols.
-func Quotef(format string, args ...any) string {
-	return fmt.Sprintf(format, args...)
-}
+	// Quotef formats text according to format specifier without quote formatting symbols.
+	Quotef = formatting.Quotef
+)

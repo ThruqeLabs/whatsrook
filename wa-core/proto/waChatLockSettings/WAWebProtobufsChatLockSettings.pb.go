@@ -7,12 +7,12 @@
 package waChatLockSettings
 
 import (
-	waUserPassword "go.mau.fi/whatsmeow/proto/waUserPassword"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	waUserPassword "wa-core/proto/waUserPassword"
 )
 
 const (

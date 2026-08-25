@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/store/sqlstore"
+	"wa-core/types"
 )
 
 // LogGroupMessage records message activity counters per group and user per day,

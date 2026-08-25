@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 
@@ -22,9 +23,9 @@ import (
 	"whatsrook/utils"
 	"whatsrook/utils/qr"
 
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	"go.mau.fi/whatsmeow/types/events"
+	"wa-core"
+	"wa-core/store/sqlstore"
+	"wa-core/types/events"
 )
 
 // BotConfig holds configuration parameters for the CLI
@@ -40,6 +41,7 @@ type BotConfig struct {
 	WSPort          int
 	Database        string
 	AsyncMessageAck bool
+	ConsoleOut      io.Writer
 }
 
 // Bot manages the CLI bot lifecycle: WhatsApp client init, event handling,
@@ -77,6 +79,79 @@ func (b *Bot) GroupManager() *GroupManager {
 	return b.groupManager
 }
 
+// Client returns the underlying core whatsrook.Client instance.
+func (b *Bot) Client() *whatsrook.Client {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	return b.client
+}
+
+// Hub returns the Bot's WebSocket Hub instance.
+func (b *Bot) Hub() *Hub {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	return b.hub
+}
+
+// StartupTime returns the time at which the Bot was initialized.
+func (b *Bot) StartupTime() time.Time {
+	return b.startupTime
+}
+
+// IsConnected returns whether the bot is currently connected to WhatsApp.
+func (b *Bot) IsConnected() bool {
+	b.mu.Lock()
+	cli := b.client
+	b.mu.Unlock()
+	if cli == nil || cli.WAClient() == nil {
+		return false
+	}
+	return cli.WAClient().IsConnected()
+}
+
+// Connect triggers WhatsApp socket connection.
+func (b *Bot) Connect() error {
+	b.mu.Lock()
+	cli := b.client
+	b.mu.Unlock()
+	if cli == nil {
+		return errors.New("client not initialized")
+	}
+	return cli.Connect()
+}
+
+// PairPhone requests an 8-digit pairing code.
+func (b *Bot) PairPhone(ctx context.Context, phone string) (string, error) {
+	b.mu.Lock()
+	cli := b.client
+	b.mu.Unlock()
+	if cli == nil {
+		return "", errors.New("client not initialized")
+	}
+	return cli.PairPhone(ctx, phone)
+}
+
+// Logout logs out the WhatsApp session.
+func (b *Bot) Logout(ctx context.Context) error {
+	b.mu.Lock()
+	cli := b.client
+	b.mu.Unlock()
+	if cli == nil {
+		return nil
+	}
+	return cli.Logout(ctx)
+}
+
+// ClearSessionDB clears session database records.
+func (b *Bot) ClearSessionDB(ctx context.Context, jid string) {
+	b.mu.Lock()
+	cli := b.client
+	b.mu.Unlock()
+	if cli != nil {
+		cli.ClearSessionDB(ctx, jid)
+	}
+}
+
 // Launches the Client and it's Activities
 func (b *Bot) Start(ctx context.Context) error {
 	// Validate session phone number
@@ -95,6 +170,7 @@ func (b *Bot) Start(ctx context.Context) error {
 		Verbose:         b.cfg.Verbose,
 		SkipOldMessages: b.cfg.SkipOldMessages,
 		AsyncMessageAck: b.cfg.AsyncMessageAck,
+		ConsoleOut:      b.cfg.ConsoleOut,
 	})
 
 	b.mu.Lock()
@@ -182,15 +258,23 @@ func (b *Bot) Start(ctx context.Context) error {
 			}
 
 			for i := 10; i > 0; i-- {
-				fmt.Printf("\r  Retrying in %2ds…", i)
+				if b.cfg.ConsoleOut != nil {
+					Logger.Warn("Pairing timed out, retrying...", "seconds", i)
+				} else {
+					fmt.Printf("\r  Retrying in %2ds…", i)
+				}
 				select {
 				case <-time.After(time.Second):
 				case <-ctx.Done():
-					fmt.Println()
+					if b.cfg.ConsoleOut == nil {
+						fmt.Println()
+					}
 					return nil
 				}
 			}
-			fmt.Println("\r  Retrying now…         ")
+			if b.cfg.ConsoleOut == nil {
+				fmt.Println("\r  Retrying now…         ")
+			}
 			continue
 		}
 
@@ -481,12 +565,15 @@ func (b *Bot) runQR(ctx context.Context) error {
 		}()
 		Logger.Info("temporary QR server started", "url", qrServer.URL())
 		if b.cfg.QRCode {
-			fmt.Printf("\n==> Open this URL in your browser to scan the QR code: %s\n\n", qrServer.URL())
+			if b.cfg.ConsoleOut == nil {
+				fmt.Printf("\n==> Open this URL in your browser to scan the QR code: %s\n\n", qrServer.URL())
+			}
 		}
 	}
 
 	for evt := range qrChan {
-		if evt.Event == "code" {
+		switch evt.Event {
+		case "code":
 			if qrServer != nil {
 				qrServer.UpdateCode(evt.Code)
 			}
@@ -494,14 +581,14 @@ func (b *Bot) runQR(ctx context.Context) error {
 				Kind:    EventPairQR,
 				Payload: PairQRPayload{Code: evt.Code},
 			})
-		} else if evt.Event == "success" {
+		case "success":
 			if qrServer != nil {
 				qrServer.SetPaired()
 				time.Sleep(1 * time.Second)
 			}
 			Logger.Info("QR code pairing successful, shutting down temporary QR server")
 			return nil
-		} else {
+		default:
 			Logger.Debug("qr channel event", "event", evt.Event)
 		}
 	}

@@ -14,7 +14,7 @@ import (
 	"unicode"
 	"whatsrook/logger"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 
 	cliutils "whatsrook/cli/utils"
 )

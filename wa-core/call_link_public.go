@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strings"
 
-	"go.mau.fi/whatsmeow/types"
+	"wa-core/types"
 )
 
 // CallLinkOptions selects an audio or video call link.
@@ -34,7 +34,6 @@ type CallLinkPreview struct {
 
 // CreateCallLink creates a reusable audio or video call link.
 func (c *Client) CreateCallLink(ctx context.Context, opts CallLinkOptions) (CallLink, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/call_link.go#L41-L50
 	if c == nil || c.callEngine() == nil {
 		return CallLink{}, errors.New("wacaller: call-link signaling is unavailable")
 	}
@@ -54,7 +53,6 @@ func (c *Client) PreviewCallLink(
 	tokenOrURL string,
 	opts CallLinkOptions,
 ) (CallLinkPreview, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/call_link.go#L52-L74
 	if c == nil || c.callEngine() == nil {
 		return CallLinkPreview{}, errors.New("wacaller: call-link signaling is unavailable")
 	}
@@ -85,7 +83,6 @@ func (c *Client) JoinCallLink(
 	tokenOrURL string,
 	opts CallLinkOptions,
 ) (*Call, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/call_link.go#L76-L155
 	if c == nil || c.callEngine() == nil {
 		return nil, errors.New("wacaller: call-link signaling is unavailable")
 	}
@@ -97,7 +94,6 @@ func (c *Client) JoinCallLink(
 }
 
 func waitingRoomStateFromJoin(join *callLinkJoinResult) WaitingRoomState {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/call_link.go#L157-L197
 	if join == nil {
 		return WaitingRoomState{}
 	}
@@ -109,7 +105,6 @@ func waitingRoomStateFromJoin(join *callLinkJoinResult) WaitingRoomState {
 }
 
 func selectedCallLinkMedia(opts CallLinkOptions) callLinkMedia {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/voip/call_link.go#L12-L18
 	if opts.Video {
 		return callLinkMediaVideo
 	}
@@ -117,7 +112,6 @@ func selectedCallLinkMedia(opts CallLinkOptions) callLinkMedia {
 }
 
 func publicCallLink(token string, media callLinkMedia) CallLink {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/types/call.go#L26-L38
 	return CallLink{
 		Token: token,
 		URL:   fmt.Sprintf("https://call.whatsapp.com/%s/%s", media, token),
@@ -126,7 +120,6 @@ func publicCallLink(token string, media callLinkMedia) CallLink {
 }
 
 func normalizeCallLinkToken(raw string) (string, error) {
-	// Source of truth: https://github.com/tulir/whatsmeow/blob/3775fbadf88fdf44ada62ae5c5db5d7cc6f26259/call_link.go#L52-L81
 	raw = strings.TrimSpace(raw)
 	if raw == "" {
 		return "", errors.New("wacaller: call-link token is required")

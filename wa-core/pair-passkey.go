@@ -1,6 +1,3 @@
-// Copyright (c) 2026 Tulir Asokan
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
@@ -18,14 +15,14 @@ import (
 	"golang.org/x/crypto/curve25519"
 	"google.golang.org/protobuf/proto"
 
-	waBinary "go.mau.fi/whatsmeow/binary"
-	"go.mau.fi/whatsmeow/proto/waCompanionReg"
-	"go.mau.fi/whatsmeow/store"
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
-	"go.mau.fi/whatsmeow/util/gcmutil"
-	"go.mau.fi/whatsmeow/util/hkdfutil"
-	"go.mau.fi/whatsmeow/util/keys"
+	waBinary "wa-core/binary"
+	"wa-core/proto/waCompanionReg"
+	"wa-core/store"
+	"wa-core/types"
+	"wa-core/types/events"
+	"wa-core/util/gcmutil"
+	"wa-core/util/hkdfutil"
+	"wa-core/util/keys"
 )
 
 type passkeyLinkingCache struct {
